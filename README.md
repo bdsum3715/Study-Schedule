@@ -1,5 +1,4 @@
-# Study-Schedule
-<!DOCTYPE html>
+Study Schedule 
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -13,22 +12,52 @@
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#F8FAFC;min-height:100vh;padding-bottom:40px;}
   .safe-top{padding-top:env(safe-area-inset-top,0px);}
-  .header{background:linear-gradient(135deg,#5C54D4,#0369A1);color:white;padding:20px 16px 18px;margin-bottom:14px;}
+
+  /* Header */
+  .header{background:linear-gradient(135deg,#5C54D4,#0369A1);color:white;padding:20px 16px 18px;margin-bottom:12px;}
+  .header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
   .header-label{font-size:10px;font-weight:700;letter-spacing:2px;opacity:0.7;text-transform:uppercase;margin-bottom:3px;}
   .header h1{font-size:20px;font-weight:800;margin-bottom:3px;}
-  .header p{font-size:12px;opacity:0.85;margin-bottom:14px;}
+  .header p{font-size:12px;opacity:0.85;}
+  .streak-badge{background:rgba(255,255,255,0.18);border-radius:14px;padding:8px 12px;text-align:center;min-width:56px;}
+  .streak-flame{font-size:16px;line-height:1;}
+  .streak-num{font-size:15px;font-weight:800;line-height:1.3;}
+  .streak-label{font-size:8px;opacity:0.75;text-transform:uppercase;letter-spacing:0.5px;}
   .progress-bar{background:rgba(255,255,255,0.25);border-radius:20px;height:9px;margin-bottom:6px;}
   .progress-fill{background:white;border-radius:20px;height:9px;transition:width 0.3s;}
   .progress-label{font-size:11px;opacity:0.8;}
+
+  /* Today banner */
+  .today-banner{margin:0 14px 14px;background:white;border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(15,23,42,0.08);border:1.5px solid #E0E7FF;cursor:pointer;position:relative;overflow:hidden;}
+  .today-banner::before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px;background:linear-gradient(180deg,#5C54D4,#0369A1);}
+  .today-banner-label{font-size:10px;font-weight:700;color:#5C54D4;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+  .today-banner-title{font-size:15px;font-weight:800;color:#0F172A;margin-bottom:6px;}
+  .today-banner-sub{font-size:12px;color:#64748B;display:flex;align-items:center;gap:6px;}
+  .today-banner-arrow{margin-left:auto;color:#5C54D4;font-size:16px;}
+  .today-banner-progress{display:flex;gap:3px;margin-top:10px;}
+  .today-banner-dot{flex:1;height:5px;border-radius:3px;background:#E2E8F0;}
+  .today-banner-dot.done{background:#5C54D4;}
+  .today-banner-empty{color:#94A3B8;font-size:13px;text-align:center;padding:8px 0;}
+  .today-banner-vacation{background:#FFFBEB;border-color:#FDE68A;}
+  .today-banner-vacation .today-banner-label{color:#B45309;}
+  .today-banner-vacation::before{background:#B45309;}
+
+  /* Nav */
   .nav{display:flex;gap:8px;padding:0 14px;margin-bottom:14px;flex-wrap:wrap;}
   .nav button{padding:9px 16px;border-radius:10px;border:none;cursor:pointer;font-weight:600;font-size:12px;transition:all 0.15s;}
   .nav button.active{background:#5C54D4;color:white;box-shadow:0 3px 10px rgba(92,84,212,0.3);}
   .nav button.inactive{background:white;color:#64748B;box-shadow:0 1px 3px rgba(0,0,0,0.08);}
-  .nav button.reset{padding:9px 12px;border:1.5px solid #E2E8F0;background:white;color:#94A3B8;margin-left:auto;}
+  .nav button.reset{padding:9px 12px;border:1.5px solid #E2E8F0;background:white;color:#94A3B8;}
+  .nav button.rebalance{padding:9px 12px;border:1.5px solid #5C54D4;background:white;color:#5C54D4;font-weight:700;}
+  .nav-spacer{margin-left:auto;}
+
   .content{padding:0 14px;}
+
+  /* Phase card */
   .phase{margin-bottom:9px;border-radius:12px;overflow:hidden;}
   .phase-header{padding:12px 14px;cursor:pointer;border-left:4px solid;border:1.5px solid;border-radius:12px;user-select:none;}
   .phase-header.open{border-radius:12px 12px 0 0;}
+  .phase-header.is-today-phase{box-shadow:0 0 0 2px rgba(92,84,212,0.25);}
   .phase-dates{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:2px;}
   .phase-label{font-weight:700;color:#0F172A;font-size:14px;margin-bottom:2px;}
   .phase-note{font-size:11px;color:#64748B;}
@@ -38,11 +67,15 @@
   .phase-row{display:flex;justify-content:space-between;align-items:flex-start;}
   .phase-progress{margin-top:8px;border-radius:10px;height:4px;}
   .phase-progress-fill{border-radius:10px;height:4px;transition:width 0.3s;}
+  .rebalanced-tag{display:inline-block;font-size:9px;font-weight:700;background:#EEF2FF;color:#5C54D4;padding:2px 7px;border-radius:6px;margin-left:6px;vertical-align:middle;}
+
   .days{background:white;border:1.5px solid;border-top:none;border-radius:0 0 12px 12px;overflow:hidden;}
   .day{border-bottom:1px solid #F1F5F9;}
   .day:last-child{border-bottom:none;}
+  .day.is-today{background:linear-gradient(90deg,rgba(92,84,212,0.06),transparent);}
   .day-header{padding:10px 15px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;}
   .day-label{font-weight:600;color:#0F172A;font-size:12.5px;}
+  .today-pill{display:inline-block;background:#5C54D4;color:white;font-size:9px;font-weight:700;padding:2px 7px;border-radius:6px;margin-left:6px;letter-spacing:0.3px;}
   .day-circle{width:18px;height:18px;border-radius:50%;border:2px solid #CBD5E1;background:transparent;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-right:8px;}
   .day-circle.done{border-color:var(--pc);background:var(--pc);}
   .day-circle span{color:white;font-size:10px;font-weight:700;}
@@ -57,6 +90,16 @@
   .task-box span{color:white;font-size:11px;font-weight:700;}
   .task-text{font-size:12.5px;color:#334155;line-height:1.5;}
   .task-text.done{color:#94A3B8;text-decoration:line-through;}
+
+  /* Weakness log */
+  .weakness-btn{width:100%;text-align:left;padding:9px 12px;background:#FFF5F5;border:1px dashed #FCA5A5;border-radius:9px;color:#B91C1C;font-size:11.5px;font-weight:600;cursor:pointer;margin-top:6px;}
+  .weakness-entries{margin-top:6px;}
+  .weakness-entry{background:#FFF5F5;border-radius:9px;padding:9px 11px;margin-bottom:6px;font-size:12px;color:#7F1D1D;position:relative;}
+  .weakness-entry-del{position:absolute;top:6px;right:8px;color:#B91C1C;font-size:11px;cursor:pointer;font-weight:700;opacity:0.6;}
+  .weakness-textarea{width:100%;border:1.5px solid #FCA5A5;border-radius:9px;padding:9px 11px;font-size:12.5px;font-family:inherit;resize:vertical;min-height:50px;color:#334155;}
+  .weakness-save{background:#B91C1C;color:white;border:none;padding:7px 14px;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;margin-top:6px;}
+
+  /* Cards / lists */
   .card{background:white;border-radius:14px;padding:18px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
   .card-title{font-weight:700;color:#0F172A;font-size:15px;margin-bottom:14px;}
   .order-item{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start;padding:11px 13px;background:#F8FAFC;border-radius:10px;border-left:3px solid #5C54D4;}
@@ -70,36 +113,109 @@
   .resource-name{font-weight:700;font-size:13px;}
   .resource-desc{color:#475569;font-size:12px;margin-top:2px;}
   .overview-item{background:white;border-radius:12px;padding:13px 15px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.05);border-left:4px solid;}
-  .overview-label{font-weight:700;font-size:13px;}
+  .overview-label{font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px;}
   .overview-dates{font-size:11px;color:#94A3B8;margin-bottom:4px;}
   .overview-desc{color:#475569;font-size:13px;}
   .principle-box{background:#EEF2FF;border-radius:14px;padding:14px 16px;margin-top:6px;font-size:13px;color:#334155;line-height:1.7;border:1px solid #C7D2FE;}
+
+  /* Modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.6);z-index:100;display:flex;align-items:flex-end;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px);}
+  .modal{background:white;border-radius:24px 24px 0 0;width:100%;max-width:540px;padding:24px 20px 36px;max-height:88vh;overflow-y:auto;}
+  .modal-handle{width:40px;height:4px;background:#E2E8F0;border-radius:4px;margin:0 auto 20px;}
+  .modal-title{font-size:18px;font-weight:800;color:#0F172A;margin-bottom:4px;}
+  .modal-sub{font-size:13px;color:#64748B;margin-bottom:20px;}
+  .modal-section{margin-bottom:18px;}
+  .modal-section-title{font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+  .rebalance-stat{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#F8FAFC;border-radius:12px;margin-bottom:8px;}
+  .rebalance-stat-label{font-size:13px;color:#475569;}
+  .rebalance-stat-val{font-size:15px;font-weight:800;color:#5C54D4;}
+  .rebalance-day{display:flex;gap:12px;padding:14px;background:#F0F4FF;border-radius:12px;margin-bottom:8px;border-left:4px solid #5C54D4;}
+  .rebalance-day-date{font-size:12px;font-weight:700;color:#5C54D4;min-width:90px;}
+  .rebalance-day-tasks{font-size:12.5px;color:#334155;line-height:1.6;}
+  .rebalance-warn{background:#FFF9F0;border:1px solid #FDE68A;border-radius:12px;padding:12px 14px;font-size:12.5px;color:#92400E;margin-bottom:16px;}
+  .rebalance-ok{background:#F0FFF8;border:1px solid #6EE7B7;border-radius:12px;padding:12px 14px;font-size:12.5px;color:#065F46;margin-bottom:16px;}
+  .modal-btn{width:100%;padding:14px;border-radius:14px;border:none;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;}
+  .modal-btn-primary{background:#5C54D4;color:white;}
+  .modal-btn-secondary{background:#F1F5F9;color:#475569;}
+  .modal-btn-danger{background:#FEE2E2;color:#B91C1C;}
+
+  .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#0F172A;color:white;padding:12px 22px;border-radius:14px;font-size:13px;font-weight:600;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,0.35);max-width:90vw;text-align:center;}
 </style>
 </head>
+
 <body>
 <div class="safe-top">
 <div class="header">
-  <div class="header-label">Step 1 + Year 3 Foundation</div>
-  <h1>Ultimate Summer Study Plan</h1>
-  <p>Jun 24 – Sep 27 · Year 3 starts Sep 28</p>
+  <div class="header-top">
+    <div>
+      <div class="header-label">Step 1 + Year 3 Foundation</div>
+      <h1>Ultimate Summer Study Plan</h1>
+      <p>Jun 24 – Sep 27 · Year 3 starts Sep 28</p>
+    </div>
+    <div class="streak-badge" id="streak-badge">
+      <div class="streak-flame">🔥</div>
+      <div class="streak-num" id="streak-num">0</div>
+      <div class="streak-label">day streak</div>
+    </div>
+  </div>
   <div class="progress-bar"><div class="progress-fill" id="main-bar" style="width:0%"></div></div>
   <div class="progress-label" id="main-label">0 of 0 tasks · 0% complete</div>
 </div>
+
+<div class="today-banner" id="today-banner" onclick="jumpToToday()">
+  <!-- populated by renderTodayBanner() -->
+</div>
+
 <div class="nav">
   <button class="active" id="btn-tracker" onclick="showView('tracker')">📋 Tracker</button>
   <button class="inactive" id="btn-order" onclick="showView('order')">📐 Daily Order</button>
   <button class="inactive" id="btn-overview" onclick="showView('overview')">📅 Overview</button>
-  <button class="reset inactive" onclick="resetAll()">Reset</button>
+  <button class="rebalance inactive" onclick="openRebalance()">⚖️ Rebalance</button>
+  <button class="reset inactive nav-spacer" onclick="resetAll()">Reset</button>
 </div>
+
 <div class="content">
   <div id="view-tracker"></div>
   <div id="view-order" style="display:none"></div>
   <div id="view-overview" style="display:none"></div>
 </div>
+
+<!-- Rebalance Modal -->
+<div class="modal-overlay" id="modal-rebalance" style="display:none" onclick="closeModalOutside(event,'modal-rebalance')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">⚖️ Rebalance Plan</div>
+    <div class="modal-sub" id="modal-date"></div>
+    <div id="modal-body"></div>
+    <button class="modal-btn modal-btn-secondary" onclick="closeModal('modal-rebalance')">Close</button>
+  </div>
+</div>
+
+<!-- Weakness Log Modal -->
+<div class="modal-overlay" id="modal-weakness" style="display:none" onclick="closeModalOutside(event,'modal-weakness')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📝 Weakness Log</div>
+    <div class="modal-sub" id="weakness-modal-sub"></div>
+    <div id="weakness-modal-body"></div>
+    <button class="modal-btn modal-btn-secondary" onclick="closeModal('modal-weakness')">Close</button>
+  </div>
+</div>
+
+<!-- Undo Schedule Confirm Modal -->
+<div class="modal-overlay" id="modal-undo" style="display:none" onclick="closeModalOutside(event,'modal-undo')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">↩️ Reset Schedule?</div>
+    <div class="modal-sub">This restores all phase and day dates to the original plan. Your checked-off progress is NOT affected — only dates reset.</div>
+    <button class="modal-btn modal-btn-danger" onclick="confirmUndoSchedule()">Reset Dates to Original</button>
+    <button class="modal-btn modal-btn-secondary" onclick="closeModal('modal-undo')">Cancel</button>
+  </div>
+</div>
+
 </div>
 
 <script>
-// All chapter names verified against both uploaded Bootcamp PDFs
 const PHASES = [
   {id:"p0",color:"#334155",type:"study",label:"Phase 0 — Setup + General Pathology",dates:"Jun 24–26",note:"3 days · Set up your full system · Begin the language of disease",days:[
     {id:"d0a",label:"Jun 24 Wed — Setup",tasks:[
@@ -603,6 +719,19 @@ const PHASES = [
   ]},
 ];
 
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let checked = {};        // { taskId: true }
+let schedule = {};        // { dayId: 'YYYY-MM-DD' }
+let weaknessLog = {};     // { phaseId: [ {text, date} ] }
+let openPhase = null;
+let openDay = null;
+let currentView = 'tracker';
+let originalPhasesSnapshot = null; // deep copy for undo
+
 const DAILY_ORDER=[
   {n:1,t:"AnKing: due reviews",note:"Always first — before Bootcamp, before everything. 60 min."},
   {n:2,t:"Bootcamp or Sketchy",note:"Bootcamp for physiology/path/immuno/pharm foundations. Sketchy for Micro + Pharm ONLY. 90–120 min."},
@@ -612,68 +741,323 @@ const DAILY_ORDER=[
   {n:6,t:"Weakness log",note:"Topic + why I missed it + correct rule in one line + fix resource."},
 ];
 
-const OVERVIEW=[
-  {c:"#334155",l:"Phase 0",d:"Jun 24–26",desc:"Setup. Cell injury, necrosis, apoptosis. Bootcamp Pathology Ch.1 + Immunology Ch.3 Inflammatory Response."},
-  {c:"#B45309",l:"Vacation",d:"Jun 27–29",desc:"AnKing reviews only."},
-  {c:"#5C54D4",l:"Phase 1 ⭐",d:"Jun 30 – Jul 13",desc:"General pathology: hemodynamics, thrombosis, shock, neoplasia. Immunology Ch.1–13. Pharm Ch.1–3 + Sketchy Autonomic Drugs module."},
-  {c:"#B45309",l:"Vacation",d:"Jul 14–26",desc:"AnKing reviews only."},
-  {c:"#B91C1C",l:"Phase 2 ⭐",d:"Jul 27 – Aug 9",desc:"Bootcamp Micro Ch.1–39 in order. Sketchy Micro: Bacteria · RNA Viruses · DNA Viruses · Fungi · Parasites modules. Sketchy Pharm: Antimicrobials module."},
-  {c:"#B45309",l:"Vacation",d:"Aug 10–24",desc:"AnKing reviews only."},
-  {c:"#047857",l:"Phase 3 ⭐",d:"Aug 25 – Sep 5",desc:"Bootcamp Cardiology Ch.1–28 (5 days) → Pulmonology Ch.1–8 (3 days) → Nephrology Ch.1–15 (3 days). Physiology always before pathology. Sketchy Pharm: Cardiovascular and Renal module."},
-  {c:"#B45309",l:"Vacation",d:"Sep 6–24",desc:"AnKing reviews only."},
-  {c:"#0F766E",l:"Phase 4",d:"Sep 25–27",desc:"Light review: Bootcamp Heme/Onc Ch.2·6·7 + Sketchy Pharm consolidation. Pharm master review. Year 3 workflow setup. Year 3 starts Sep 28."},
+const OVERVIEW_TEMPLATE=[
+  {c:"#334155",id:"p0",l:"Phase 0"},
+  {c:"#B45309",id:"vac1",l:"Vacation"},
+  {c:"#5C54D4",id:"p1",l:"Phase 1 ⭐"},
+  {c:"#B45309",id:"vac2",l:"Vacation"},
+  {c:"#B91C1C",id:"p2",l:"Phase 2 ⭐"},
+  {c:"#B45309",id:"vac3",l:"Vacation"},
+  {c:"#047857",id:"p3",l:"Phase 3 ⭐"},
+  {c:"#B45309",id:"vac4",l:"Vacation"},
+  {c:"#0F766E",id:"p4",l:"Phase 4"},
 ];
+const OVERVIEW_DESC={
+  p0:"Setup. Cell injury, necrosis, apoptosis. Bootcamp Pathology Ch.1 + Immunology Ch.3 Inflammatory Response.",
+  vac1:"AnKing reviews only.",
+  p1:"General pathology: hemodynamics, thrombosis, shock, neoplasia. Immunology Ch.1–13. Pharm Ch.1–3 + Sketchy Autonomic Drugs module.",
+  vac2:"AnKing reviews only.",
+  p2:"Bootcamp Micro Ch.1–39 in order. Sketchy Micro: Bacteria · RNA Viruses · DNA Viruses · Fungi · Parasites modules. Sketchy Pharm: Antimicrobials module.",
+  vac3:"AnKing reviews only.",
+  p3:"Bootcamp Cardiology Ch.1–28 (5 days) → Pulmonology Ch.1–8 (3 days) → Nephrology Ch.1–15 (3 days). Physiology always before pathology. Sketchy Pharm: Cardiovascular and Renal module.",
+  vac4:"AnKing reviews only.",
+  p4:"Light review: Bootcamp Heme/Onc Ch.2·6·7 + Sketchy Pharm consolidation. Pharm master review. Year 3 workflow setup. Year 3 starts Sep 28.",
+};
 
-let checked={},openPhase=null,openDay=null,currentView='tracker';
-
-function load(){try{const s=localStorage.getItem('sp_v5');if(s)checked=JSON.parse(s);}catch(e){}}
-function save(){try{localStorage.setItem('sp_v5',JSON.stringify(checked));}catch(e){}}
-function allIds(){return PHASES.flatMap(p=>p.days.flatMap(d=>d.tasks.map((_,i)=>`${d.id}_${i}`)));}
-function phaseDone(ph){return ph.days.flatMap(d=>d.tasks.map((_,i)=>`${d.id}_${i}`)).filter(id=>checked[id]).length;}
-function phaseTotal(ph){return ph.days.flatMap(d=>d.tasks).length;}
-function dayDone(d){return d.tasks.filter((_,i)=>checked[`${d.id}_${i}`]).length;}
-
-function updateHeader(){
-  const ids=allIds(),done=ids.filter(id=>checked[id]).length,pct=ids.length?Math.round(done/ids.length*100):0;
-  document.getElementById('main-bar').style.width=pct+'%';
-  document.getElementById('main-label').textContent=`${done} of ${ids.length} tasks · ${pct}% complete`;
+// ═══════════════════════════════════════════════════════════
+// STORAGE
+// ═══════════════════════════════════════════════════════════
+function load(){ try{const s=localStorage.getItem('sp_v5'); if(s) checked=JSON.parse(s);}catch(e){} }
+function save(){ try{localStorage.setItem('sp_v5',JSON.stringify(checked));}catch(e){} }
+function saveSchedule(){ try{localStorage.setItem('sp_sched_v1',JSON.stringify(schedule));}catch(e){} }
+function loadSchedule(){ try{const s=localStorage.getItem('sp_sched_v1'); if(s) schedule=JSON.parse(s);}catch(e){} }
+function saveWeakness(){ try{localStorage.setItem('sp_weakness_v1',JSON.stringify(weaknessLog));}catch(e){} }
+function loadWeakness(){ try{const s=localStorage.getItem('sp_weakness_v1'); if(s) weaknessLog=JSON.parse(s);}catch(e){} }
+function savePhasesMeta(){
+  // Persist only the mutable date/note/label fields, not the whole tree
+  const meta={};
+  PHASES.forEach(p=>{
+    meta[p.id]={dates:p.dates,note:p.note,days:p.days.map(d=>({id:d.id,label:d.label}))};
+  });
+  try{localStorage.setItem('sp_phasemeta_v1',JSON.stringify(meta));}catch(e){}
+}
+function loadPhasesMeta(){
+  try{
+    const s=localStorage.getItem('sp_phasemeta_v1');
+    if(!s) return;
+    const meta=JSON.parse(s);
+    PHASES.forEach(p=>{
+      if(meta[p.id]){
+        p.dates=meta[p.id].dates;
+        p.note=meta[p.id].note;
+        meta[p.id].days.forEach(md=>{
+          const day=p.days.find(d=>d.id===md.id);
+          if(day) day.label=md.label;
+        });
+      }
+    });
+  }catch(e){}
 }
 
+// ═══════════════════════════════════════════════════════════
+// TASK / DAY / PHASE HELPERS
+// ═══════════════════════════════════════════════════════════
+function allIds(){ return PHASES.flatMap(p=>p.days.flatMap(d=>d.tasks.map((_,i)=>`${d.id}_${i}`))); }
+function phaseDone(ph){ return ph.days.flatMap(d=>d.tasks.map((_,i)=>`${d.id}_${i}`)).filter(id=>checked[id]).length; }
+function phaseTotal(ph){ return ph.days.flatMap(d=>d.tasks).length; }
+function dayDone(d){ return d.tasks.filter((_,i)=>checked[`${d.id}_${i}`]).length; }
+function todayISO(){ const t=new Date(); t.setHours(0,0,0,0); return t.toISOString().split('T')[0]; }
+
+function fmtDate(dateStr){
+  const d=new Date(dateStr+'T12:00:00');
+  return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]+' '+
+    ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+' '+d.getDate();
+}
+function fmtDateLong(dateStr){
+  const d=new Date(dateStr+'T12:00:00');
+  return ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()]+', '+
+    ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+' '+d.getDate();
+}
+
+// ═══════════════════════════════════════════════════════════
+// STREAK CALCULATION
+// ═══════════════════════════════════════════════════════════
+// A "streak day" = a scheduled study day where the AnKing review task (task index 0) is checked.
+// We walk backward from today through scheduled days until we hit a day that isn't done.
+function computeStreak(){
+  const today=todayISO();
+  // Build list of {date, day} for all study days using current schedule, sorted ascending
+  const allStudyDays=PHASES.filter(p=>p.type==='study').flatMap(p=>p.days);
+  const withDates=allStudyDays
+    .map(d=>({ day:d, date:schedule[d.id] }))
+    .filter(x=>x.date && x.date<=today)
+    .sort((a,b)=>b.date.localeCompare(a.date)); // descending, most recent first
+
+  let streak=0;
+  for(const {day,date} of withDates){
+    // "Done" for streak purposes = AnKing review task (index 0) checked
+    const ankingDone = checked[`${day.id}_0`];
+    if(ankingDone){
+      streak++;
+    } else if(date===today){
+      // Today not done yet doesn't break the streak — just doesn't count yet
+      continue;
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
+// ═══════════════════════════════════════════════════════════
+// WEAKNESS LOG
+// ═══════════════════════════════════════════════════════════
+function openWeaknessLog(phaseId){
+  const phase=PHASES.find(p=>p.id===phaseId);
+  if(!phase) return;
+  document.getElementById('weakness-modal-sub').textContent=phase.label;
+  renderWeaknessBody(phaseId);
+  document.getElementById('modal-weakness').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function renderWeaknessBody(phaseId){
+  const entries=weaknessLog[phaseId]||[];
+  let html='';
+  if(entries.length>0){
+    html+='<div class="weakness-entries">';
+    entries.forEach((e,i)=>{
+      html+=`<div class="weakness-entry">${escapeHtml(e.text)}<span class="weakness-entry-del" onclick="deleteWeaknessEntry('${phaseId}',${i})">✕ remove</span></div>`;
+    });
+    html+='</div>';
+  } else {
+    html+='<div style="text-align:center;color:#94A3B8;font-size:12.5px;padding:16px 0">No entries yet. Add one below after each wrong Qbank answer.</div>';
+  }
+  html+=`<textarea class="weakness-textarea" id="weakness-input" placeholder="Topic: ... | Why I missed it: ... | Correct rule: ..."></textarea>`;
+  html+=`<button class="weakness-save" onclick="addWeaknessEntry('${phaseId}')">+ Add entry</button>`;
+  document.getElementById('weakness-modal-body').innerHTML=html;
+}
+
+function addWeaknessEntry(phaseId){
+  const input=document.getElementById('weakness-input');
+  const text=input.value.trim();
+  if(!text) return;
+  if(!weaknessLog[phaseId]) weaknessLog[phaseId]=[];
+  weaknessLog[phaseId].push({ text, date: todayISO() });
+  saveWeakness();
+  renderWeaknessBody(phaseId);
+  renderTracker(); // update entry count shown inline
+}
+
+function deleteWeaknessEntry(phaseId,idx){
+  if(!weaknessLog[phaseId]) return;
+  weaknessLog[phaseId].splice(idx,1);
+  saveWeakness();
+  renderWeaknessBody(phaseId);
+  renderTracker();
+}
+
+function weaknessCount(phaseId){
+  return (weaknessLog[phaseId]||[]).length;
+}
+
+function escapeHtml(s){
+  const d=document.createElement('div');
+  d.textContent=s;
+  return d.innerHTML;
+}
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════
+// HEADER / STREAK
+// ═══════════════════════════════════════════════════════════
+function updateHeader(){
+  const ids=allIds(), done=ids.filter(id=>checked[id]).length, pct=ids.length?Math.round(done/ids.length*100):0;
+  document.getElementById('main-bar').style.width=pct+'%';
+  document.getElementById('main-label').textContent=`${done} of ${ids.length} tasks · ${pct}% complete`;
+
+  const streak=computeStreak();
+  document.getElementById('streak-num').textContent=streak;
+  const badge=document.getElementById('streak-badge');
+  const flame=badge.querySelector('.streak-flame');
+  if(streak===0){ flame.textContent='💤'; badge.style.opacity='0.6'; }
+  else if(streak<3){ flame.textContent='🔥'; badge.style.opacity='1'; }
+  else if(streak<7){ flame.textContent='🔥🔥'; badge.style.opacity='1'; }
+  else { flame.textContent='🔥🔥🔥'; badge.style.opacity='1'; }
+}
+
+// ═══════════════════════════════════════════════════════════
+// TODAY BANNER
+// ═══════════════════════════════════════════════════════════
+function findTodayDay(){
+  const today=todayISO();
+  for(const phase of PHASES){
+    for(const day of phase.days){
+      if(schedule[day.id]===today) return { phase, day };
+    }
+  }
+  return null;
+}
+
+function isVacationToday(){
+  const today=todayISO();
+  return VACATION_RANGES.some(([s,e])=>today>=s&&today<=e);
+}
+
+function renderTodayBanner(){
+  const el=document.getElementById('today-banner');
+  const today=todayISO();
+
+  if(isVacationToday()){
+    el.className='today-banner today-banner-vacation';
+    el.innerHTML=`
+      <div class="today-banner-label">Today · ${fmtDate(today)}</div>
+      <div class="today-banner-title">🌴 Vacation day</div>
+      <div class="today-banner-sub">AnKing due reviews only — no new content today</div>`;
+    return;
+  }
+
+  const found=findTodayDay();
+  el.className='today-banner';
+
+  if(!found){
+    const beforeStart=today<'2026-06-24';
+    const afterEnd=today>'2026-09-27';
+    el.innerHTML=`
+      <div class="today-banner-label">Today · ${fmtDate(today)}</div>
+      <div class="today-banner-empty">${
+        beforeStart ? 'Plan starts June 24 — nothing scheduled yet.' :
+        afterEnd ? '🎓 Plan period complete — Year 3 is underway.' :
+        'No day scheduled for today. Tap ⚖️ Rebalance to fix the schedule.'
+      }</div>`;
+    return;
+  }
+
+  const { phase, day } = found;
+  const done=dayDone(day), total=day.tasks.length;
+  const titlePart=day.label.replace(/^\S+ \d+ \S+(\s\(S\d+\/\d+\))? — /,'');
+  const dots=Array.from({length:total},(_,i)=>{
+    const isDone=!!checked[`${day.id}_${i}`];
+    return `<div class="today-banner-dot${isDone?' done':''}"></div>`;
+  }).join('');
+
+  el.innerHTML=`
+    <div class="today-banner-label">Today · ${fmtDate(today)}</div>
+    <div class="today-banner-title">${titlePart}</div>
+    <div class="today-banner-sub">
+      <span>${done}/${total} tasks complete</span>
+      <span class="today-banner-arrow">→</span>
+    </div>
+    <div class="today-banner-progress">${dots}</div>`;
+
+  // stash for click handler
+  el.dataset.phaseId=phase.id;
+  el.dataset.dayId=day.id;
+}
+
+function jumpToToday(){
+  const found=findTodayDay();
+  if(!found) return;
+  showView('tracker');
+  openPhase=found.phase.id;
+  openDay=found.day.id;
+  renderTracker();
+  // scroll into view after render
+  setTimeout(()=>{
+    const el=document.getElementById('day-'+found.day.id);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
+  },50);
+}
+
+// ═══════════════════════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════════════════════
 function showView(v){
   currentView=v;
   ['tracker','order','overview'].forEach(n=>{
     document.getElementById('view-'+n).style.display=n===v?'block':'none';
     const b=document.getElementById('btn-'+n);
-    if(b)b.className=n===v?'active':'inactive';
+    if(b) b.className=n===v?'active':'inactive';
   });
 }
 
 function resetAll(){
-  if(!confirm('Reset all progress?'))return;
-  checked={};save();renderAll();
+  if(!confirm('Reset all checked-off progress? (Schedule and weakness log stay intact)')) return;
+  checked={};
+  save();
+  renderAll();
 }
 
+// ═══════════════════════════════════════════════════════════
+// TASK TOGGLE
+// ═══════════════════════════════════════════════════════════
 function toggleTask(tid){
-  checked[tid]=!checked[tid];save();updateHeader();
-  const box=document.getElementById('box-'+tid),txt=document.getElementById('txt-'+tid);
+  checked[tid]=!checked[tid];
+  save();
+  updateHeader();
+  renderTodayBanner();
+
+  const box=document.getElementById('box-'+tid), txt=document.getElementById('txt-'+tid);
   const pc=document.getElementById('pc-'+tid.split('_')[0]);
   const col=pc?pc.value:'#5C54D4';
-  if(box){box.className='task-box'+(checked[tid]?' done':'');box.style.setProperty('--pc',col);box.innerHTML=checked[tid]?'<span>✓</span>':'';}
-  if(txt){txt.className='task-text'+(checked[tid]?' done':'');}
+  if(box){ box.className='task-box'+(checked[tid]?' done':''); box.style.setProperty('--pc',col); box.innerHTML=checked[tid]?'<span>✓</span>':''; }
+  if(txt){ txt.className='task-text'+(checked[tid]?' done':''); }
+
   const dayId=tid.split('_').slice(0,-1).join('_');
-  updateDayCircle(dayId);updatePhaseProgress(dayId);
+  updateDayCircle(dayId);
+  updatePhaseProgress(dayId);
 }
 
 function updateDayCircle(dayId){
   for(const p of PHASES){
     const d=p.days.find(d=>d.id===dayId);
     if(d){
-      const done=dayDone(d),circ=document.getElementById('circ-'+dayId),cnt=document.getElementById('cnt-'+dayId);
+      const done=dayDone(d), circ=document.getElementById('circ-'+dayId), cnt=document.getElementById('cnt-'+dayId);
       if(circ){
-        if(done===d.tasks.length){circ.className='day-circle done';circ.style.setProperty('--pc',p.color);circ.innerHTML='<span>✓</span>';}
-        else{circ.className='day-circle';circ.innerHTML='';}
+        if(done===d.tasks.length){ circ.className='day-circle done'; circ.style.setProperty('--pc',p.color); circ.innerHTML='<span>✓</span>'; }
+        else{ circ.className='day-circle'; circ.innerHTML=''; }
       }
-      if(cnt)cnt.textContent=`${done}/${d.tasks.length}`;
+      if(cnt) cnt.textContent=`${done}/${d.tasks.length}`;
       break;
     }
   }
@@ -682,33 +1066,41 @@ function updateDayCircle(dayId){
 function updatePhaseProgress(dayId){
   for(const p of PHASES){
     if(p.days.find(d=>d.id===dayId)){
-      const done=phaseDone(p),total=phaseTotal(p),pct=total?Math.round(done/total*100):0;
-      const pe=document.getElementById('ppct-'+p.id),ce=document.getElementById('pcnt-'+p.id),be=document.getElementById('pbar-'+p.id);
-      if(pe)pe.textContent=pct+'%';if(ce)ce.textContent=`${done}/${total}`;if(be)be.style.width=pct+'%';
+      const done=phaseDone(p), total=phaseTotal(p), pct=total?Math.round(done/total*100):0;
+      const pe=document.getElementById('ppct-'+p.id), ce=document.getElementById('pcnt-'+p.id), be=document.getElementById('pbar-'+p.id);
+      if(pe) pe.textContent=pct+'%'; if(ce) ce.textContent=`${done}/${total}`; if(be) be.style.width=pct+'%';
       break;
     }
   }
 }
 
-function togglePhase(id){openPhase=openPhase===id?null:id;renderTracker();}
-function toggleDay(id){openDay=openDay===id?null:id;renderTracker();}
+function togglePhase(id){ openPhase=openPhase===id?null:id; renderTracker(); }
+function toggleDay(id){ openDay=openDay===id?null:id; renderTracker(); }
 
-function rgba(hex,a){const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return`rgba(${r},${g},${b},${a})`;}
+function rgba(hex,a){ const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return `rgba(${r},${g},${b},${a})`; }
 
+// ═══════════════════════════════════════════════════════════
+// TRACKER RENDER
+// ═══════════════════════════════════════════════════════════
 function renderTracker(){
+  const today=todayISO();
   let html='';
   for(const phase of PHASES){
-    const isOpen=openPhase===phase.id,isVac=phase.type==='vacation';
-    const done=phaseDone(phase),total=phaseTotal(phase),pct=total?Math.round(done/total*100):0;
-    const bg=isVac?'#FFFBEB':rgba(phase.color,0.07),bc=rgba(phase.color,0.2);
+    const isOpen=openPhase===phase.id, isVac=phase.type==='vacation';
+    const done=phaseDone(phase), total=phaseTotal(phase), pct=total?Math.round(done/total*100):0;
+    const bg=isVac?'#FFFBEB':rgba(phase.color,0.07), bc=rgba(phase.color,0.2);
+    const isTodayPhase=!isVac && phase.days.some(d=>schedule[d.id]===today);
+    const wCount=weaknessCount(phase.id);
+    const rebalanced=phase.note.includes('Rebalanced');
+
     html+=`<input type="hidden" id="pc-${phase.id}" value="${phase.color}">
     <div class="phase">
-      <div class="phase-header${isOpen?' open':''}" style="background:${bg};border-color:${bc};border-left-color:${phase.color};opacity:${isVac?0.8:1}" onclick="togglePhase('${phase.id}')">
+      <div class="phase-header${isOpen?' open':''}${isTodayPhase?' is-today-phase':''}" style="background:${bg};border-color:${bc};border-left-color:${phase.color};opacity:${isVac?0.8:1}" onclick="togglePhase('${phase.id}')">
         <div class="phase-row">
           <div style="flex:1">
             <div class="phase-dates" style="color:${phase.color}">${phase.dates}</div>
             <div class="phase-label">${phase.label}</div>
-            <div class="phase-note">${phase.note}</div>
+            <div class="phase-note">${phase.note.replace(' · Rebalanced ⚖️','')}${rebalanced?'<span class="rebalanced-tag">⚖️ rebalanced</span>':''}</div>
           </div>
           <div class="phase-meta">
             ${!isVac?`<div style="text-align:right"><div class="phase-pct" id="ppct-${phase.id}" style="color:${phase.color}">${pct}%</div><div class="phase-count" id="pcnt-${phase.id}">${done}/${total}</div></div>`:''}
@@ -717,17 +1109,19 @@ function renderTracker(){
         </div>
         ${!isVac&&total>0?`<div class="phase-progress" style="background:${rgba(phase.color,0.2)}"><div class="phase-progress-fill" id="pbar-${phase.id}" style="background:${phase.color};width:${pct}%"></div></div>`:''}
       </div>`;
+
     if(isOpen){
       html+=`<div class="days" style="border-color:${rgba(phase.color,0.15)}">`;
       for(const day of phase.days){
-        const dd=dayDone(day),dt=day.tasks.length,isDayOpen=openDay===day.id,allDone=dd===dt;
-        html+=`<div class="day">
+        const dd=dayDone(day), dt=day.tasks.length, isDayOpen=openDay===day.id, allDone=dd===dt;
+        const isToday=schedule[day.id]===today;
+        html+=`<div class="day${isToday?' is-today':''}" id="day-${day.id}">
           <div class="day-header" style="background:${allDone?rgba(phase.color,0.05):'white'}" onclick="toggleDay('${day.id}')">
             <div class="day-info">
               <div class="day-circle${allDone?' done':''}" id="circ-${day.id}" style="--pc:${phase.color};${allDone?`background:${phase.color};border-color:${phase.color}`:''}">
                 ${allDone?'<span>✓</span>':''}
               </div>
-              <span class="day-label">${day.label}</span>
+              <span class="day-label">${day.label}${isToday?'<span class="today-pill">TODAY</span>':''}</span>
             </div>
             <div class="day-meta">
               <span class="day-count" id="cnt-${day.id}" style="color:${phase.color}">${dd}/${dt}</span>
@@ -737,7 +1131,7 @@ function renderTracker(){
         if(isDayOpen){
           html+=`<div class="tasks">`;
           day.tasks.forEach((task,i)=>{
-            const tid=`${day.id}_${i}`,done=!!checked[tid];
+            const tid=`${day.id}_${i}`, done=!!checked[tid];
             html+=`<div class="task" onclick="toggleTask('${tid}')">
               <div class="task-box${done?' done':''}" id="box-${tid}" style="--pc:${phase.color};${done?`background:${phase.color};border-color:${phase.color}`:''}">
                 ${done?'<span>✓</span>':''}
@@ -749,6 +1143,14 @@ function renderTracker(){
         }
         html+=`</div>`;
       }
+      // Weakness log button for study phases
+      if(!isVac){
+        html+=`<div style="padding:4px 15px 14px">
+          <button class="weakness-btn" onclick="event.stopPropagation();openWeaknessLog('${phase.id}')">
+            📝 Weakness log ${wCount>0?`(${wCount} ${wCount===1?'entry':'entries'})`:'— add entry'}
+          </button>
+        </div>`;
+      }
       html+=`</div>`;
     }
     html+=`</div>`;
@@ -756,6 +1158,9 @@ function renderTracker(){
   document.getElementById('view-tracker').innerHTML=html;
 }
 
+// ═══════════════════════════════════════════════════════════
+// DAILY ORDER RENDER
+// ═══════════════════════════════════════════════════════════
 function renderOrder(){
   let html=`<div class="card"><div class="card-title">📐 Every study day — always in this order</div>`;
   DAILY_ORDER.forEach(s=>{
@@ -766,24 +1171,337 @@ function renderOrder(){
     html+=`<div class="limit-row"><span class="limit-rule">${r}</span><span class="limit-cards">${c}</span></div>`;
   });
   html+=`</div><div class="card"><div class="card-title">📚 Resource roles</div>`;
-  [{r:"Bootcamp",c:"#5C54D4",d:"Main teaching spine. Watch at 1.25–1.5×. Pause before answers. Used for physiology, pathophysiology, immunology, pharm foundations."},{r:"Sketchy",c:"#B91C1C",d:"Micro + Pharm ONLY. Watch every video TWICE — story first, then active recall. Close and write everything you remember after."},{r:"First Aid",c:"#047857",d:"Annotation hub. Read matching pages AFTER Bootcamp/Sketchy. Annotate gaps. 20–30 min max."},{r:"AnKing",c:"#0369A1",d:"Reviews always first. Unsuspend only cards from today's studied topic. Never unsuspend entire decks."},{r:"Qbank",c:"#334155",d:"10–20/day early phases → 30–40 later. Every wrong answer → weakness log immediately."}].forEach(({r,c,d})=>{
+  [{r:"Bootcamp",c:"#5C54D4",d:"Main teaching spine. Watch at 1.25–1.5×. Pause before answers. Used for physiology, pathophysiology, immunology, pharm foundations."},
+   {r:"Sketchy",c:"#B91C1C",d:"Micro + Pharm ONLY. Watch every video TWICE — story first, then active recall. Close and write everything you remember after."},
+   {r:"First Aid",c:"#047857",d:"Annotation hub. Read matching pages AFTER Bootcamp/Sketchy. Annotate gaps. 20–30 min max."},
+   {r:"AnKing",c:"#0369A1",d:"Reviews always first. Unsuspend only cards from today's studied topic. Never unsuspend entire decks."},
+   {r:"Qbank",c:"#334155",d:"10–20/day early phases → 30–40 later. Every wrong answer → weakness log immediately."}].forEach(({r,c,d})=>{
     html+=`<div class="resource-item" style="border-left:3px solid ${c}"><div class="resource-name" style="color:${c}">${r}</div><div class="resource-desc">${d}</div></div>`;
   });
   html+=`</div>`;
   document.getElementById('view-order').innerHTML=html;
 }
 
+// ═══════════════════════════════════════════════════════════
+// OVERVIEW RENDER — now dynamic, synced with actual PHASES data
+// ═══════════════════════════════════════════════════════════
 function renderOverview(){
   let html='';
-  OVERVIEW.forEach(({c,l,d,desc})=>{
-    html+=`<div class="overview-item" style="border-left-color:${c}"><div class="overview-label" style="color:${c}">${l}</div><div class="overview-dates">${d}</div><div class="overview-desc">${desc}</div></div>`;
+  OVERVIEW_TEMPLATE.forEach(({c,id,l})=>{
+    const phase=PHASES.find(p=>p.id===id);
+    if(!phase) return;
+    const rebalanced=phase.note && phase.note.includes('Rebalanced');
+    html+=`<div class="overview-item" style="border-left-color:${c}">
+      <div class="overview-label" style="color:${c}">${l}${rebalanced?'<span class="rebalanced-tag">⚖️ rebalanced</span>':''}</div>
+      <div class="overview-dates">${phase.dates}</div>
+      <div class="overview-desc">${OVERVIEW_DESC[id]}</div>
+    </div>`;
   });
   html+=`<div class="principle-box"><strong style="color:#5C54D4">Guiding principle: </strong>Physiology first → pathophysiology second → pharmacology layered in. Sketchy for Micro and Pharm only. Bootcamp is the teaching spine. First Aid annotates. AnKing retains. Questions prove understanding.</div>`;
   document.getElementById('view-overview').innerHTML=html;
 }
 
-function renderAll(){updateHeader();renderTracker();renderOrder();renderOverview();}
-load();renderAll();
+function renderAll(){
+  updateHeader();
+  renderTodayBanner();
+  renderTracker();
+  renderOrder();
+  renderOverview();
+}
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════
+// REBALANCE
+// ═══════════════════════════════════════════════════════════
+const ALL_STUDY_DAYS = PHASES.filter(p=>p.type==='study').flatMap(p=>p.days);
+
+const VACATION_RANGES = [
+  ['2026-06-27','2026-06-29'],
+  ['2026-07-14','2026-07-26'],
+  ['2026-08-10','2026-08-24'],
+  ['2026-09-06','2026-09-24'],
+];
+
+const ORIGINAL_DATES = [
+  '2026-06-24','2026-06-25','2026-06-26',
+  '2026-06-30','2026-07-01','2026-07-02','2026-07-03','2026-07-04','2026-07-05',
+  '2026-07-06','2026-07-07','2026-07-08','2026-07-09','2026-07-10','2026-07-11',
+  '2026-07-12','2026-07-13',
+  '2026-07-27','2026-07-28','2026-07-29','2026-07-30','2026-07-31',
+  '2026-08-01','2026-08-02','2026-08-03','2026-08-04','2026-08-05',
+  '2026-08-06','2026-08-07','2026-08-08','2026-08-09',
+  '2026-08-25','2026-08-26','2026-08-27','2026-08-28','2026-08-29',
+  '2026-08-30','2026-08-31','2026-09-01','2026-09-02','2026-09-03',
+  '2026-09-04','2026-09-05',
+  '2026-09-25','2026-09-26','2026-09-27',
+];
+
+const ORIGINAL_PHASE_META = {}; // filled once at load, before any mutation
+
+function captureOriginalPhaseMeta(){
+  PHASES.forEach(p=>{
+    ORIGINAL_PHASE_META[p.id]={
+      dates:p.dates,
+      note:p.note,
+      days:p.days.map(d=>({id:d.id,label:d.label}))
+    };
+  });
+}
+
+function buildDefaultSchedule(){
+  ALL_STUDY_DAYS.forEach((day,i)=>{ schedule[day.id]=ORIGINAL_DATES[i]||'2026-09-27'; });
+}
+
+function addDays(dateStr,n){
+  const d=new Date(dateStr+'T12:00:00');
+  d.setDate(d.getDate()+n);
+  return d.toISOString().split('T')[0];
+}
+function isVacation(dateStr){
+  return VACATION_RANGES.some(([s,e])=>dateStr>=s&&dateStr<=e);
+}
+function getAvailableDates(fromStr){
+  const dates=[];
+  let d=fromStr;
+  const end='2026-09-27';
+  while(d<=end){
+    if(!isVacation(d)) dates.push(d);
+    d=addDays(d,1);
+  }
+  return dates;
+}
+
+// Core compression: spread N content days across M calendar dates evenly
+function buildCompressedSchedule(remainingDays, availableDates){
+  const N=remainingDays.length, M=availableDates.length;
+  if(M===0) return remainingDays.map(day=>({ date:'2026-09-27', days:[day] }));
+  const slots=[];
+  let ci=0;
+  availableDates.forEach((date,si)=>{
+    const target=Math.round(N*(si+1)/M);
+    const prev=Math.round(N*si/M);
+    const count=target-prev;
+    const group=[];
+    for(let g=0;g<count&&ci<N;g++,ci++) group.push(remainingDays[ci]);
+    if(group.length>0) slots.push({date,days:group});
+  });
+  while(ci<N){ slots[slots.length-1].days.push(remainingDays[ci++]); }
+  return slots;
+}
+
+function openRebalance(){
+  const todayStr=todayISO();
+  const remaining=ALL_STUDY_DAYS.filter(d=>dayDone(d)<d.tasks.length);
+  const completed=ALL_STUDY_DAYS.length-remaining.length;
+  const available=getAvailableDates(todayStr);
+  const slots=buildCompressedSchedule(remaining,available);
+  const maxPerDay=slots.length>0?Math.max(...slots.map(s=>s.days.length)):0;
+
+  document.getElementById('modal-date').textContent='Today is '+fmtDateLong(todayStr);
+  let html='';
+
+  html+='<div class="modal-section"><div class="modal-section-title">Where you stand</div>';
+  html+='<div class="rebalance-stat"><span class="rebalance-stat-label">✅ Days completed</span><span class="rebalance-stat-val" style="color:#047857">'+completed+' of '+ALL_STUDY_DAYS.length+'</span></div>';
+  html+='<div class="rebalance-stat"><span class="rebalance-stat-label">📋 Content days remaining</span><span class="rebalance-stat-val" style="color:#5C54D4">'+remaining.length+'</span></div>';
+  html+='<div class="rebalance-stat"><span class="rebalance-stat-label">📅 Available study dates</span><span class="rebalance-stat-val" style="color:#0369A1">'+available.length+'</span></div>';
+  if(remaining.length>0&&available.length>0){
+    const avg=(remaining.length/available.length).toFixed(1);
+    html+='<div class="rebalance-stat"><span class="rebalance-stat-label">📊 Avg sessions per day</span><span class="rebalance-stat-val" style="color:'+(parseFloat(avg)>1.5?'#B91C1C':'#047857')+'">'+avg+'x</span></div>';
+  }
+  html+='</div>';
+
+  if(remaining.length===0){
+    html+='<div class="rebalance-ok">🎉 Every study day is complete. Summer done.</div>';
+  } else if(available.length===0){
+    html+='<div class="rebalance-warn">⚠️ No study dates remaining before Sep 27. Focus on AnKing reviews only.</div>';
+  } else {
+    if(maxPerDay<=1){
+      html+='<div class="rebalance-ok">✅ You are on track — one content day per calendar day.</div>';
+    } else if(maxPerDay===2){
+      html+='<div class="rebalance-warn" style="background:#FFF9F0;border-color:#FDE68A;color:#92400E">⚠️ You are behind. The plan below doubles up on '+slots.filter(s=>s.days.length>1).length+' days — longer sessions on those days but fully doable.</div>';
+    } else {
+      html+='<div class="rebalance-warn">⚠️ You are significantly behind. Some days have '+maxPerDay+' sessions. If you need to cut anything, cut review days before content days.</div>';
+    }
+
+    html+='<div class="modal-section"><div class="modal-section-title">Load by period</div>';
+    [
+      {label:'Jul 1–13',s:'2026-07-01',e:'2026-07-13'},
+      {label:'Jul 27–Aug 9',s:'2026-07-27',e:'2026-08-09'},
+      {label:'Aug 25–Sep 5',s:'2026-08-25',e:'2026-09-05'},
+      {label:'Sep 25–27',s:'2026-09-25',e:'2026-09-27'},
+    ].forEach(({label,s,e})=>{
+      const bSlots=slots.filter(sl=>sl.date>=s&&sl.date<=e);
+      const total=bSlots.reduce((sum,sl)=>sum+sl.days.length,0);
+      if(!total) return;
+      const avg=(total/bSlots.length).toFixed(1);
+      html+='<div class="rebalance-stat"><span class="rebalance-stat-label">'+label+'</span><span class="rebalance-stat-val" style="color:'+(parseFloat(avg)>1.5?'#B91C1C':'#047857')+'">'+total+' sessions · '+bSlots.length+' days · '+avg+'x/day</span></div>';
+    });
+    html+='</div>';
+
+    html+='<div class="modal-section"><div class="modal-section-title">New schedule preview (first 14 study dates)</div>';
+    slots.slice(0,14).forEach(({date,days})=>{
+      const isToday=date===todayStr;
+      const multi=days.length>1;
+      const borderStyle=isToday?'border-left-color:#047857;background:#F0FFF8;':multi?'border-left-color:#B91C1C;background:#FFF5F5;':'';
+      const dateColor=isToday?'color:#047857':multi?'color:#B91C1C':'';
+      const prefix=isToday?'TODAY &middot; ':'';
+      const sessionCount=multi?'<div style="font-size:10px;font-weight:700;color:#B91C1C;margin-top:2px">'+days.length+' sessions</div>':'';
+      const divider='<div style="border-top:1px dashed #E2E8F0;margin:6px 0"></div>';
+      const taskHtml=days.map((d,i)=>{
+        const sessionLabel=multi?'<span style="font-size:10px;font-weight:700;color:#94A3B8;display:block;margin-bottom:2px">SESSION '+(i+1)+'</span>':'';
+        const cleanLabel=d.label.replace(/^\S+ \d+ \S+(\s\(S\d+\/\d+\))? — /,'');
+        return sessionLabel+cleanLabel;
+      }).join(divider);
+      html+='<div class="rebalance-day" style="'+borderStyle+'">'
+        +'<div style="min-width:110px">'
+          +'<div class="rebalance-day-date" style="'+dateColor+'">'+prefix+fmtDate(date)+'</div>'
+          +sessionCount
+        +'</div>'
+        +'<div class="rebalance-day-tasks">'+taskHtml+'</div>'
+        +'</div>';
+    });
+    if(slots.length>14){
+      html+='<div style="text-align:center;font-size:12px;color:#94A3B8;padding:10px 0">+ '+(slots.length-14)+' more study dates</div>';
+    }
+    html+='</div>';
+    html+='<button class="modal-btn modal-btn-primary" onclick="applyRebalance()">⚖️ Apply — Lock In This Schedule</button>';
+  }
+
+  // Undo option — only show if schedule differs from original
+  const isModified=ALL_STUDY_DAYS.some((d,i)=>schedule[d.id]!==ORIGINAL_DATES[i]);
+  if(isModified){
+    html+='<button class="modal-btn modal-btn-secondary" id="undo-schedule-btn">↩️ Reset to Original Schedule</button>';
+  }
+
+  document.getElementById('modal-body').innerHTML=html;
+  document.getElementById('modal-rebalance').style.display='flex';
+  document.body.style.overflow='hidden';
+
+  const undoBtn=document.getElementById('undo-schedule-btn');
+  if(undoBtn){
+    undoBtn.onclick=function(){ closeModal('modal-rebalance'); openUndoConfirm(); };
+  }
+}
+
+function applyRebalance(){
+  const todayStr=todayISO();
+  const remaining=ALL_STUDY_DAYS.filter(d=>dayDone(d)<d.tasks.length);
+  const available=getAvailableDates(todayStr);
+  const slots=buildCompressedSchedule(remaining,available);
+  const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const D=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  // 1. Update day labels + save schedule
+  slots.forEach(({date,days})=>{
+    days.forEach((day,si)=>{
+      schedule[day.id]=date;
+      for(const phase of PHASES){
+        const found=phase.days.find(d=>d.id===day.id);
+        if(found){
+          const d=new Date(date+'T12:00:00');
+          const multi=days.length>1;
+          const prefix=M[d.getMonth()]+' '+d.getDate()+' '+D[d.getDay()]+(multi?' (S'+(si+1)+'/'+days.length+')':'')+' — ';
+          found.label=found.label.replace(/^\S+ \d+ \S+(\s\(S\d+\/\d+\))? — /,prefix);
+          break;
+        }
+      }
+    });
+  });
+
+  // 2. Update phase dates + notes based on new day schedule
+  for(const phase of PHASES){
+    if(phase.type==='vacation') continue;
+    const studyDays=phase.days;
+    if(!studyDays.length) continue;
+    const assignedDates=studyDays.map(d=>schedule[d.id]).filter(Boolean).sort();
+    if(!assignedDates.length) continue;
+    const firstDate=assignedDates[0], lastDate=assignedDates[assignedDates.length-1];
+    function fmtShort(ds){ const d=new Date(ds+'T12:00:00'); return M[d.getMonth()]+' '+d.getDate(); }
+    phase.dates = firstDate===lastDate ? fmtShort(firstDate) : fmtShort(firstDate)+' – '+fmtShort(lastDate);
+
+    const dateCounts={};
+    assignedDates.forEach(d=>{ dateCounts[d]=(dateCounts[d]||0)+1; });
+    const doubledDays=Object.values(dateCounts).filter(c=>c>1).length;
+    const totalDays=Object.keys(dateCounts).length;
+
+    let baseNote=phase.note;
+    baseNote=baseNote.replace(/^\d+ days\s*·\s*/,'');
+    baseNote=baseNote.replace(/\s*·\s*\d+ days[^·]*/g,'');
+    baseNote=baseNote.replace(/\s*·\s*Rebalanced[^·]*/g,'');
+    baseNote=baseNote.replace(/\s*·\s*STOP large[^·]*/g,'');
+    baseNote=baseNote.replace(/\s*·\s*Reduce[^·]*/g,'');
+    baseNote=baseNote.trimEnd().replace(/\s*·\s*$/,'');
+
+    phase.note=baseNote+(doubledDays>0?' · '+totalDays+' days ('+doubledDays+' doubled up) · Rebalanced ⚖️':' · '+totalDays+' days · Rebalanced ⚖️');
+  }
+
+  saveSchedule();
+  savePhasesMeta();
+  closeModal('modal-rebalance');
+  renderAll();
+  const multi=slots.filter(s=>s.days.length>1).length;
+  showToast(multi>0?'⚖️ Rebalanced · '+multi+' days have 2+ sessions':'✅ On track · 1 session per day');
+}
+
+// ═══════════════════════════════════════════════════════════
+// UNDO SCHEDULE
+// ═══════════════════════════════════════════════════════════
+function openUndoConfirm(){
+  document.getElementById('modal-undo').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function confirmUndoSchedule(){
+  // Restore original schedule dates
+  ALL_STUDY_DAYS.forEach((day,i)=>{ schedule[day.id]=ORIGINAL_DATES[i]||'2026-09-27'; });
+
+  // Restore original phase meta (dates, notes, day labels)
+  PHASES.forEach(p=>{
+    const orig=ORIGINAL_PHASE_META[p.id];
+    if(!orig) return;
+    p.dates=orig.dates;
+    p.note=orig.note;
+    orig.days.forEach(od=>{
+      const day=p.days.find(d=>d.id===od.id);
+      if(day) day.label=od.label;
+    });
+  });
+
+  saveSchedule();
+  savePhasesMeta();
+  closeModal('modal-undo');
+  renderAll();
+  showToast('↩️ Schedule reset to original dates');
+}
+
+// ═══════════════════════════════════════════════════════════
+// MODAL / TOAST UTILITIES
+// ═══════════════════════════════════════════════════════════
+function showToast(msg){
+  const t=document.createElement('div');
+  t.className='toast';
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3500);
+}
+function closeModal(id){
+  document.getElementById(id).style.display='none';
+  document.body.style.overflow='';
+}
+function closeModalOutside(e,id){
+  if(e.target===document.getElementById(id)) closeModal(id);
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+captureOriginalPhaseMeta();
+load();
+loadWeakness();
+loadSchedule();
+if(Object.keys(schedule).length===0) buildDefaultSchedule();
+loadPhasesMeta();
+renderAll();
 </script>
 </body>
 </html>
