@@ -1,4 +1,4 @@
-Study Schedule 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -140,6 +140,26 @@ Study Schedule
   .modal-btn-danger{background:#FEE2E2;color:#B91C1C;}
 
   .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#0F172A;color:white;padding:12px 22px;border-radius:14px;font-size:13px;font-weight:600;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,0.35);max-width:90vw;text-align:center;}
+
+  /* Calendar */
+  .cal-month{background:white;border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+  .cal-month-title{font-size:15px;font-weight:800;color:#0F172A;margin-bottom:12px;text-align:center;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+  .cal-dow{font-size:9px;font-weight:700;color:#94A3B8;text-align:center;padding:4px 0;text-transform:uppercase;}
+  .cal-cell{aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;position:relative;cursor:pointer;padding:2px;}
+  .cal-cell.empty{visibility:hidden;}
+  .cal-cell-num{font-weight:700;font-size:11px;}
+  .cal-cell-dot{width:5px;height:5px;border-radius:50%;margin-top:2px;}
+  .cal-cell.today{box-shadow:0 0 0 2px #5C54D4;}
+  .cal-cell-mins{font-size:7.5px;margin-top:1px;opacity:0.85;}
+  .cal-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid #F1F5F9;}
+  .cal-legend-item{display:flex;align-items:center;gap:5px;font-size:10.5px;color:#475569;}
+  .cal-legend-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0;}
+  .cal-day-popup{background:white;border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.1);border-left:4px solid #5C54D4;}
+  .cal-day-popup-date{font-size:11px;font-weight:700;color:#5C54D4;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+  .cal-day-popup-title{font-size:15px;font-weight:800;color:#0F172A;margin-bottom:6px;}
+  .cal-day-popup-time{display:inline-block;background:#EEF2FF;color:#5C54D4;font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px;margin-bottom:8px;}
+  .cal-week-summary{display:flex;justify-content:space-between;padding:10px 14px;background:#F8FAFC;border-radius:10px;margin-bottom:8px;font-size:11.5px;color:#475569;}
 </style>
 </head>
 
@@ -150,7 +170,7 @@ Study Schedule
     <div>
       <div class="header-label">Step 1 + Year 3 Foundation</div>
       <h1>Ultimate Summer Study Plan</h1>
-      <p>Jun 24 – Sep 27 · Year 3 starts Sep 28</p>
+      <p>Jul 4 – Sep 27 · Year 3 starts Sep 28</p>
     </div>
     <div class="streak-badge" id="streak-badge">
       <div class="streak-flame">🔥</div>
@@ -168,6 +188,7 @@ Study Schedule
 
 <div class="nav">
   <button class="active" id="btn-tracker" onclick="showView('tracker')">📋 Tracker</button>
+  <button class="inactive" id="btn-calendar" onclick="showView('calendar')">🗓️ Calendar</button>
   <button class="inactive" id="btn-order" onclick="showView('order')">📐 Daily Order</button>
   <button class="inactive" id="btn-overview" onclick="showView('overview')">📅 Overview</button>
   <button class="rebalance inactive" onclick="openRebalance()">⚖️ Rebalance</button>
@@ -176,6 +197,7 @@ Study Schedule
 
 <div class="content">
   <div id="view-tracker"></div>
+  <div id="view-calendar" style="display:none"></div>
   <div id="view-order" style="display:none"></div>
   <div id="view-overview" style="display:none"></div>
 </div>
@@ -217,60 +239,45 @@ Study Schedule
 
 <script>
 const PHASES = [
-  {id:"p0",color:"#334155",type:"study",label:"Phase 0 — Setup + General Pathology",dates:"Jun 24–26",note:"3 days · Set up your full system · Begin the language of disease",days:[
-    {id:"d0a",label:"Jun 24 Wed — Setup",tasks:[
-      "1. AnKing: due reviews only (no new cards today)",
-      "2. Set up First Aid as your annotation hub",
-      "3. Create AnKing tag system: Pathology · Immunology · Micro · Pharm · Cardio · Pulm · Renal",
-      "4. Make Bootcamp + Sketchy checklists for the summer",
-      "5. Skim First Aid: How to Use This Book + Step 1 checklist overview",
+  {id:"p1",color:"#5C54D4",priority:true,type:"study",label:"Phase 1 — General Pathology, Immunology + Pharm Foundations",dates:"Jul 4 – Jul 13",note:"⭐ Year 3 Priority · Foundational pathology + immunology + pharm basics",days:[
+    {id:"d1start",mins:135,label:"Jul 4 Sat — Setup + Cell injury + Inflammation",tasks:[
+      "1. AnKing: set up tag system — Pathology · Immunology · Micro · Pharm · Cardio · Pulm · Renal (10 min, once)",
+      "2. AnKing: due reviews (60 min)",
+      "3. First Aid Pathology: cellular adaptations · reversible/irreversible injury · necrosis vs apoptosis · free radicals · ischemia-reperfusion (this is your primary source — no dedicated Bootcamp Pathology subject exists)",
+      "4. Bootcamp Immunology: Ch.3 Inflammatory Response",
+      "5. First Aid Pathology: acute/chronic inflammation · granulomas · chemical mediators · wound healing (25 min checklist)",
+      "6. AnKing: new cards — Pathology + Inflammation tags (40–60 new)",
+      "7. Qbank: 15 questions — pathology only",
+      "8. Weakness log: every wrong answer → topic + why + correct rule",
     ]},
-    {id:"d0b",label:"Jun 25 Thu — Cell injury",tasks:[
-      "1. AnKing: due reviews (60 min)",
-      "2. Bootcamp Pathology: Ch.1 Cell Injury and Death",
-      "3. First Aid Pathology: cellular adaptations · reversible/irreversible injury · necrosis vs apoptosis · free radicals · ischemia-reperfusion (20 min checklist)",
-      "4. AnKing: unsuspend + do Pathology tag cards only (40–60 new)",
-      "5. Qbank: 10 questions — pathology only",
-      "6. Weakness log: every wrong answer → topic + why + correct rule",
-    ]},
-    {id:"d0c",label:"Jun 26 Fri — Inflammation",tasks:[
-      "1. AnKing: due reviews (60 min)",
-      "2. Bootcamp Immunology: Ch.3 Inflammatory Response",
-      "3. First Aid Pathology: acute inflammation · chronic inflammation · granulomas · chemical mediators · wound healing (20 min checklist)",
-      "4. AnKing: new cards — inflammation tag",
-      "5. Qbank: 10 questions + weakness log",
-      "6. Write 3–5 one-line takeaways in notebook",
-    ]},
-  ]},
-  {id:"vac1",color:"#B45309",type:"vacation",label:"Vacation",dates:"Jun 27–29",note:"AnKing reviews ONLY · No new cards · No Bootcamp · No Qbank",days:[
-    {id:"vac1a",label:"Jun 27–29 — Vacation",tasks:[
-      "AnKing: due reviews only — keep streak alive",
-      "No new cards. No Bootcamp. No Sketchy. No Qbank.",
-    ]},
-  ]},
-  {id:"p1",color:"#5C54D4",priority:true,type:"study",label:"Phase 1 — General Pathology, Immunology + Pharm Foundations",dates:"Jun 30 – Jul 13",note:"⭐ Year 3 Priority · 14 days · Reduce new Anki cards Jul 12–13 before vacation",days:[
-    {id:"d1a",label:"Jun 30 Tue — Inflammation consolidation + innate immunity",tasks:[
+    {id:"d1a",mins:120,label:"Jul 5 Sun — Innate immunity",tasks:[
       "1. AnKing: due reviews (60 min)",
       "2. Bootcamp Immunology: Ch.1 Lymphoid Tissue + Ch.2 Innate Immunity",
-      "3. First Aid Pathology: inflammation/wound healing consolidation · First Aid Immunology: innate immunity pages (20 min checklist)",
+      "3. First Aid Immunology: innate immunity pages (20 min checklist)",
       "4. AnKing: new cards — Immunology tag",
       "5. Qbank: 10–20 path/immuno questions + weakness log",
     ]},
-    {id:"d1b",label:"Jul 1 Wed — Hemodynamics + vascular physiology",tasks:[
+    {id:"d1b",mins:120,label:"Jul 6 Mon — Hemodynamics + vascular physiology",tasks:[
       "1. AnKing: due reviews (60 min)",
       "2. Bootcamp Cardiology: Ch.3 Vascular System and Cardiac Parameters + Ch.4 (same chapter group)",
       "3. First Aid Pathology: edema · hyperemia/congestion · hemorrhage (20 min checklist)",
       "4. AnKing: new cards",
       "5. Qbank: 10–20 questions + weakness log",
     ]},
-    {id:"d1c",label:"Jul 2 Thu — Thrombosis, embolism, infarction",tasks:[
+    {id:"rest1",mins:20,label:"Jul 7 Tue — Buffer / catch-up day",tasks:[
+      "AnKing: due reviews — keep the streak alive",
+      "Optional: catch up on any missed AnKing new cards from this week",
+      "Optional: light Qbank review of flagged weak topics",
+      "No new Bootcamp/Sketchy content required today — this day exists so you never fall behind",
+    ]},
+    {id:"d1c",mins:120,label:"Jul 8 Wed — Thrombosis, embolism, infarction",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Cardiology: Ch.7 Vasodilation and Vasoconstriction + Ch.8 Pressure Flow Physiology",
       "3. First Aid Pathology: thrombosis · embolism · infarction mechanisms (20 min checklist)",
       "4. AnKing: new cards",
       "5. Qbank: 10–20 questions + weakness log",
     ]},
-    {id:"d1d",label:"Jul 3 Fri — Shock",tasks:[
+    {id:"d1d",mins:120,label:"Jul 9 Thu — Shock",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Cardiology: Ch.27 Pericardial Disease + Ch.28 Shock",
       "3. First Aid Pathology: shock — all types + hemodynamic parameters (20 min checklist)",
@@ -278,37 +285,43 @@ const PHASES = [
       "5. AnKing: new cards",
       "6. Qbank: 15–20 questions + weakness log",
     ]},
-    {id:"d1e",label:"Jul 4 Sat — Neoplasia 1",tasks:[
+    {id:"rest2",mins:20,label:"Jul 10 Fri — Buffer / catch-up day",tasks:[
+      "AnKing: due reviews — keep the streak alive",
+      "Optional: catch up on any missed AnKing new cards from this week",
+      "Optional: light Qbank review of flagged weak topics",
+      "No new Bootcamp/Sketchy content required today — this day exists so you never fall behind",
+    ]},
+    {id:"d1e",mins:120,label:"Jul 11 Sat — Neoplasia 1",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Hematology/Oncology: Ch.8 Oncology and Therapeutics (conceptual portions only)",
       "3. First Aid Pathology: benign vs malignant · dysplasia · carcinoma in situ · invasion · metastasis · grading/staging (20 min checklist)",
       "4. AnKing: new cards",
       "5. Qbank: 10–20 questions + weakness log",
     ]},
-    {id:"d1f",label:"Jul 5 Sun — Neoplasia 2 + hemostasis bridge",tasks:[
+    {id:"d1f",mins:120,label:"Jul 12 Sun — Neoplasia 2 + hemostasis bridge + Pathology consolidation",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Hematology/Oncology: Ch.6 Platelets + Ch.7 Coagulation and Fibrinolysis",
       "3. First Aid Pathology: oncogenes · tumor suppressors · cancer hallmarks · paraneoplastic syndromes (20 min checklist)",
       "4. Know cold: p53 · RB · APC · BCL2 — mechanism + associated cancer",
       "5. AnKing: new cards",
       "6. Qbank: 15–25 questions + weakness log",
+      "7. ⭐ Consolidation: build mechanism map from memory — cell injury → inflammation → repair · thrombosis → ischemia → infarction · mutation → neoplasia",
+      "8. ⭐ Weakness log: review all General Pathology entries so far — can you answer each without looking?",
     ]},
-    {id:"d1g",label:"Jul 6 Mon — ⭐ Pathology REVIEW DAY",tasks:[
-      "1. AnKing: due reviews",
-      "2. Review all Bootcamp Pathology chapters studied so far — no new videos",
-      "3. First Aid Pathology: full section sweep (checklist)",
-      "4. Build mechanism map from memory: cell injury → inflammation → repair · thrombosis → ischemia → infarction · mutation → neoplasia",
-      "5. Qbank: 30–40 mixed pathology questions",
-      "6. Weakness log: review all entries from this week",
-    ]},
-    {id:"d1h",label:"Jul 7 Tue — Immunology 1: adaptive immunity + T cells",tasks:[
+    {id:"d1h",mins:120,label:"Jul 13 Mon — Immunology 1: adaptive immunity + T cells",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Immunology: Ch.4 Cytokines + Ch.5 T cells",
       "3. First Aid Immunology: T cell section (20 min checklist)",
       "4. AnKing: new cards — Immunology tag",
       "5. Qbank: 10–20 questions + weakness log",
     ]},
-    {id:"d1i",label:"Jul 8 Wed — Immunology 2: B cells, antibodies, complement",tasks:[
+    {id:"rest3",mins:20,label:"Jul 14 Tue — Buffer / catch-up day",tasks:[
+      "AnKing: due reviews — keep the streak alive",
+      "Optional: catch up on any missed AnKing new cards from this week",
+      "Optional: light Qbank review of flagged weak topics",
+      "No new Bootcamp/Sketchy content required today — this day exists so you never fall behind",
+    ]},
+    {id:"d1i",mins:120,label:"Jul 15 Wed — Immunology 2: B cells, antibodies, complement",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Immunology: Ch.6 B cells + Ch.7 Antibodies + Ch.8 Complement",
       "3. First Aid Immunology: complement deficiency table (20 min checklist)",
@@ -317,7 +330,7 @@ const PHASES = [
       "6. AnKing: new cards",
       "7. Qbank: 10–20 questions + weakness log",
     ]},
-    {id:"d1j",label:"Jul 9 Thu — Immunology 3: vaccines + immunodeficiency",tasks:[
+    {id:"d1j",mins:120,label:"Jul 16 Thu — Immunology 3: vaccines + immunodeficiency",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Immunology: Ch.9 Vaccinations + Ch.10 Immunodeficiency Syndromes",
       "3. First Aid Immunology: immunodeficiency tables (20 min checklist)",
@@ -325,7 +338,13 @@ const PHASES = [
       "5. AnKing: new cards",
       "6. Qbank: 10–20 questions + weakness log",
     ]},
-    {id:"d1k",label:"Jul 10 Fri — Immunology 4: hypersensitivity + transplant",tasks:[
+    {id:"rest4",mins:20,label:"Jul 17 Fri — Buffer / catch-up day",tasks:[
+      "AnKing: due reviews — keep the streak alive",
+      "Optional: catch up on any missed AnKing new cards from this week",
+      "Optional: light Qbank review of flagged weak topics",
+      "No new Bootcamp/Sketchy content required today — this day exists so you never fall behind",
+    ]},
+    {id:"d1k",mins:120,label:"Jul 18 Sat — Immunology 4: hypersensitivity + transplant",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Immunology: Ch.11 Hypersensitivity Syndromes + Ch.12 Transfusion Reactions + Ch.13 Transplant Rejection",
       "3. First Aid Immunology: hypersensitivity + transplant sections (20 min checklist)",
@@ -334,56 +353,59 @@ const PHASES = [
       "6. AnKing: new cards",
       "7. Qbank: 10–20 questions + weakness log",
     ]},
-    {id:"d1l",label:"Jul 11 Sat — Pharm Foundations 1: Pharmacodynamics",tasks:[
+    {id:"d1l",mins:150,label:"Jul 19 Sun — Pharm Foundations 1: Pharmacodynamics",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Pharmacology: Ch.1 Pharmacodynamics",
-      "3. Sketchy Pharmacology: Pharmacology Foundations group — open the Pharmacology Foundations module and watch all videos in order (watch TWICE — story then active recall)",
+      "3. Sketchy Pharmacology: Pharmacology Foundations group — open the Pharmacology Foundations module and watch all videos in order (watch TWICE — story then active recall) · 23 videos, 4 hrs at 1.25x",
       "4. First Aid Pharmacology: PD section (20 min checklist)",
       "5. Know cold: potency vs efficacy · EC50 · ED50 · therapeutic index · agonist/antagonist/partial agonist curves",
       "6. AnKing: new cards — Pharmacology tag",
       "7. Qbank: 10–20 pharm questions + weakness log",
     ]},
-    {id:"d1m",label:"Jul 12 Sun — Pharm Foundations 2: Pharmacokinetics",tasks:[
+    {id:"rest5",mins:20,label:"Jul 20 Mon — Buffer / catch-up day",tasks:[
+      "AnKing: due reviews — keep the streak alive",
+      "Optional: catch up on any missed AnKing new cards from this week",
+      "Optional: light Qbank review of flagged weak topics",
+      "No new Bootcamp/Sketchy content required today — this day exists so you never fall behind",
+    ]},
+    {id:"d1m",mins:120,label:"Jul 21 Tue — Pharm Foundations 2: Pharmacokinetics",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Pharmacology: Ch.2 Pharmacokinetics + Ch.4 Side Effects and Toxins",
       "3. First Aid Pharmacology: PK section (20 min checklist)",
       "4. Know: Vd = dose/plasma conc · CL = Vd × ke · t½ = 0.7/ke · loading dose · maintenance dose · CYP basics",
-      "5. LIMIT new AnKing cards today — vacation in 2 days",
-      "6. Qbank: 10–20 questions + weakness log",
+      "5. Qbank: 10–20 questions + weakness log",
     ]},
-    {id:"d1n",label:"Jul 13 Mon — Autonomics + pre-vacation consolidation",tasks:[
+    {id:"d1n",mins:180,label:"Jul 22 Wed — Autonomics + Phase 1 consolidation",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Pharmacology: Ch.3 Autonomic System",
-      "3. Sketchy Pharmacology: Autonomic Drugs group — open the Autonomic Drugs module and watch all videos in order (watch TWICE — story then active recall)",
+      "3. Sketchy Pharmacology: Autonomic Drugs group — open the Autonomic Drugs module and watch all videos in order (watch TWICE — story then active recall) · 21 videos, 6 hrs at 1.25x",
       "4. First Aid Pharmacology: autonomics section (20 min checklist)",
       "5. Make receptor table: alpha-1/2 · beta-1/2 · M1-M3 · nicotinic — receptor + location + effect",
       "6. Quiz: cover 'effect' column and reproduce from memory",
-      "7. STOP large new card batches today",
-      "8. Qbank: 30–40 mixed path/immuno/pharm questions",
+      "7. Qbank: 30–40 mixed path/immuno/pharm questions",
       "9. ⭐ Saturday rule: go through all weakness log entries from this week",
     ]},
   ]},
-  {id:"vac2",color:"#B45309",type:"vacation",label:"Vacation",dates:"Jul 14–26",note:"AnKing reviews ONLY · Prioritize Path · Immuno · Pharm reviews · No new cards",days:[
-    {id:"vac2a",label:"Jul 14–26 — Vacation (13 days)",tasks:[
-      "AnKing: due reviews only, every day",
-      "No new cards. Prioritize: Pathology · Immunology · Pharm foundation reviews",
-      "Goal: return without backlog",
-    ]},
-  ]},
   {id:"p2",color:"#B91C1C",priority:true,type:"study",label:"Phase 2 — Medical Microbiology + Antimicrobial Pharmacology",dates:"Jul 27 – Aug 9",note:"⭐ Sketchy-first for every organism · Watch TWICE · Bootcamp confirms · STOP large cards Aug 9",days:[
-    {id:"d2a",label:"Jul 27 Mon — Micro framework: fundamentals + bacterial genetics + toxins",tasks:[
+    {id:"d2a",mins:210,label:"Jul 23 Thu — Micro framework: fundamentals + bacterial genetics + toxins",tasks:[
       "1. AnKing: due reviews (60–75 min)",
       "2. Bootcamp Microbiology: Ch.1 Fundamentals of Bacteriology",
       "3. Bootcamp Microbiology: Ch.2 Bacterial Genetics",
       "4. Bootcamp Microbiology: Ch.3 Bacterial Toxins",
-      "5. Sketchy Micro: Bacteria group — open the Bacteria module · watch the intro/framework videos in order (watch TWICE each — story then active recall)",
+      "5. Sketchy Micro: Bacteria group — open the Bacteria module · watch the intro/framework videos in order (watch TWICE each — story then active recall) · full module: 53 videos, 4 hrs at 1.25x, spread across this week",
       "6. First Aid Microbiology: bacteria intro tables — virulence factors · toxins (20 min checklist)",
       "7. Know: transformation · transduction · conjugation · exotoxin vs endotoxin mechanisms",
       "8. AnKing: new cards — Micro tag",
       "9. Draw gram stain decision tree from memory at end of day",
       "10. Qbank: 15–20 questions + weakness log",
     ]},
-    {id:"d2b",label:"Jul 28 Tue — Gram-positive cocci: Staph + Strep",tasks:[
+    {id:"rest6",mins:20,label:"Jul 24 Fri — Buffer / catch-up day",tasks:[
+      "AnKing: due reviews — keep the streak alive",
+      "Optional: catch up on any missed AnKing new cards from this week",
+      "Optional: light Qbank review of flagged weak topics",
+      "No new Bootcamp/Sketchy content required today — this day exists so you never fall behind",
+    ]},
+    {id:"d2b",mins:195,label:"Jul 25 Sat — Gram-positive cocci: Staph + Strep",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Microbiology: Ch.4 Staphylococcus",
       "3. Bootcamp Microbiology: Ch.5 Streptococcus",
@@ -393,7 +415,7 @@ const PHASES = [
       "7. AnKing: new cards",
       "8. Qbank: 20 questions + weakness log",
     ]},
-    {id:"d2c",label:"Jul 29 Wed — Enterococcus, Bacillus, Clostridium, Mycobacteria",tasks:[
+    {id:"d2c",mins:210,label:"Jul 26 Sun — Enterococcus, Bacillus, Clostridium, Mycobacteria",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Microbiology: Ch.6 Enterococcus and Bacillus",
       "3. Bootcamp Microbiology: Ch.7 Clostridium",
@@ -405,7 +427,13 @@ const PHASES = [
       "9. AnKing: new cards",
       "10. Qbank: 20 questions + weakness log",
     ]},
-    {id:"d2d",label:"Jul 30 Thu — Non-spore G+ rods + spirochetes + atypical bacteria",tasks:[
+    {id:"rest7",mins:20,label:"Jul 27 Mon — Buffer / catch-up day",tasks:[
+      "AnKing: due reviews — keep the streak alive",
+      "Optional: catch up on any missed AnKing new cards from this week",
+      "Optional: light Qbank review of flagged weak topics",
+      "No new Bootcamp/Sketchy content required today — this day exists so you never fall behind",
+    ]},
+    {id:"d2d",mins:210,label:"Jul 28 Tue — Non-spore G+ rods + spirochetes + atypical bacteria",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Microbiology: Ch.9 Non-Spore Forming Gram Positive Bacilli",
       "3. Bootcamp Microbiology: Ch.15 Spirochetes",
@@ -416,17 +444,23 @@ const PHASES = [
       "8. AnKing: new cards",
       "9. Qbank: 20 questions + weakness log",
     ]},
-    {id:"d2e",label:"Jul 31 Fri — Gram-negative rods I: lactose + non-lactose fermenting",tasks:[
+    {id:"d2e",mins:195,label:"Jul 29 Wed — Gram-negative rods I: lactose + non-lactose fermenting",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Microbiology: Ch.10 Lactose Fermenting Gram Negative Bacilli",
-      "3. Bootcamp Microbiology: Ch.11 Non-Lactose Fermenting Gram Negative Bacilli",
+      "3. Bootcamp Microbiology: Ch.11 Non-lactose Fermenting Gram Negative Bacilli",
       "4. Sketchy Micro: Bacteria group — watch E. coli · Klebsiella · Enterobacter · Serratia · Proteus · Salmonella · Shigella · Pseudomonas · Burkholderia videos in order (watch TWICE each)",
       "5. First Aid Microbiology: gram-negative rod tables (20 min checklist)",
       "6. Pharm tie-in: aminoglycosides (30S · nephro/ototoxicity) · fluoroquinolones (DNA gyrase) · cephalosporins by generation",
       "7. AnKing: new cards",
       "8. Qbank: 20 questions + weakness log",
     ]},
-    {id:"d2f",label:"Aug 1 Sat — Gram-negative curved bacilli + diplococci + coccobacilli",tasks:[
+    {id:"rest8",mins:20,label:"Jul 30 Thu — Buffer / catch-up day",tasks:[
+      "AnKing: due reviews — keep the streak alive",
+      "Optional: catch up on any missed AnKing new cards from this week",
+      "Optional: light Qbank review of flagged weak topics",
+      "No new Bootcamp/Sketchy content required today — this day exists so you never fall behind",
+    ]},
+    {id:"d2f",mins:210,label:"Jul 31 Fri — Gram-negative curved bacilli + diplococci + coccobacilli + Bacteria consolidation",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Microbiology: Ch.12 Gram Negative Curved Bacilli",
       "3. Bootcamp Microbiology: Ch.13 Gram Negative Diplococci",
@@ -437,72 +471,77 @@ const PHASES = [
       "8. AnKing: new cards",
       "9. Qbank: 20 questions + weakness log",
       "10. ⭐ Saturday rule: go through all weakness log entries from this week",
+      "11. ⭐ Consolidation: focus toxin → mechanism · organism → immune defect association · organism → syndrome → drug class",
+      "12. ⭐ Build missed-organism list from Ch.1–14 for targeted re-review",
     ]},
-    {id:"d2g",label:"Aug 2 Sun — ⭐ Bacteria REVIEW DAY",tasks:[
+    {id:"d2h",mins:210,label:"Aug 1 Sat — Virology basics + positive-sense + negative-sense RNA viruses",tasks:[
       "1. AnKing: due reviews",
-      "2. Review Bootcamp Microbiology Ch.1–16 — no new videos, consolidation only",
-      "3. First Aid Microbiology: full bacteriology tables sweep (checklist)",
-      "4. Focus: toxin → mechanism · organism → immune defect association · organism → syndrome → drug class",
-      "5. Build missed-organism list for targeted re-review",
-      "6. Qbank: 40 mixed bacteria questions + weakness log review",
-    ]},
-    {id:"d2h",label:"Aug 3 Mon — Virology basics + positive-sense + negative-sense RNA viruses",tasks:[
-      "1. AnKing: due reviews",
-      "2. Bootcamp Microbiology: Ch.26 Approach to Virology + Ch.27 Basics of Virology",
+      "2. Bootcamp Microbiology: Ch.26+27 Approach/Basics of Virology",
       "3. Bootcamp Microbiology: Ch.28 Positive Sense RNA Viruses",
       "4. Bootcamp Microbiology: Ch.29 Negative Sense RNA Viruses",
-      "5. Sketchy Micro: Viruses – RNA Viruses group — open the RNA Viruses module and watch all videos in order (watch TWICE each)",
+      "5. Sketchy Micro: Viruses – RNA Viruses group — open the RNA Viruses module and watch all videos in order (watch TWICE each) · 21 videos, 2.5 hrs at 1.25x",
       "6. First Aid Microbiology: viral genome chart (20 min checklist)",
       "7. Know: +sense RNA = directly translated · −sense RNA = needs RNA-dependent RNA polymerase first",
       "8. AnKing: new cards — Virology tag",
       "9. Qbank: 20 questions + weakness log",
     ]},
-    {id:"d2i",label:"Aug 4 Tue — Double-stranded RNA viruses + DNA viruses",tasks:[
+    {id:"d2i",mins:165,label:"Aug 2 Sun — Double-stranded RNA viruses + DNA viruses",tasks:[
       "1. AnKing: due reviews",
-      "2. Bootcamp Microbiology: Ch.30 Double Stranded RNA Viruses",
-      "3. Bootcamp Microbiology: Ch.31 DNA Viruses",
-      "4. Sketchy Micro: Viruses – DNA Viruses group — open the DNA Viruses module and watch all videos in order (watch TWICE each)",
+      "2. Bootcamp Microbiology: Ch.30+31 Double Stranded RNA Viruses / DNA Viruses",
+      "4. Sketchy Micro: Viruses – DNA Viruses group — open the DNA Viruses module and watch all videos in order (watch TWICE each) · 13 videos, 1.5 hrs at 1.25x",
       "5. First Aid Microbiology: DNA virus tables (20 min checklist)",
       "6. Pharm tie-in: acyclovir (HSV/VZV · TK activation) · ganciclovir (CMV) · foscarnet (CMV resistance) · oseltamivir (influenza NA inhibitor)",
       "7. AnKing: new cards",
       "8. Qbank: 20 questions + weakness log",
     ]},
-    {id:"d2j",label:"Aug 5 Wed — Mycology: dimorphic + opportunistic + tinea",tasks:[
+    {id:"rest9",mins:20,label:"Aug 3 Mon — Buffer / catch-up day",tasks:[
+      "AnKing: due reviews — keep the streak alive",
+      "Optional: catch up on any missed AnKing new cards from this week",
+      "Optional: light Qbank review of flagged weak topics",
+      "No new Bootcamp/Sketchy content required today — this day exists so you never fall behind",
+    ]},
+    {id:"d2j",mins:210,label:"Aug 4 Tue — Mycology: dimorphic + opportunistic + tinea",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Microbiology: Ch.17 Dimorphic Mycosis",
       "3. Bootcamp Microbiology: Ch.18 Opportunistic Mycosis",
       "4. Bootcamp Microbiology: Ch.19 Tinea",
-      "5. Sketchy Micro: Fungi group — open the Fungi module and watch all videos in order (watch TWICE each)",
+      "5. Sketchy Micro: Fungi group — open the Fungi module and watch all videos in order (watch TWICE each) · Fungi + Parasites combined: 29 videos, 3.5 hrs at 1.25x total",
       "6. First Aid Microbiology: fungi section (20 min checklist)",
       "7. Dimorphic rule: mold in cold · yeast in heat (except Coccidioides = spherules in tissue)",
       "8. Pharm tie-in: amphotericin B (ergosterol membrane) · azoles (ergosterol synthesis) · echinocandins (beta-glucan) · flucytosine · terbinafine",
       "9. AnKing: new cards — Fungi tag",
       "10. Qbank: 20 questions + weakness log",
     ]},
-    {id:"d2k",label:"Aug 6 Thu — Parasitology: protozoa, nematodes, cestodes, trematodes, ectoparasites",tasks:[
+    {id:"d2k",mins:240,label:"Aug 5 Wed — Parasitology: protozoa, nematodes, cestodes, trematodes, ectoparasites",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Microbiology: Ch.20 Gastrointestinal Protozoa",
       "3. Bootcamp Microbiology: Ch.21 Systemic Protozoa",
       "4. Bootcamp Microbiology: Ch.22 Nematodes",
       "5. Bootcamp Microbiology: Ch.23 Cestodes",
       "6. Bootcamp Microbiology: Ch.24 Trematodes + Ch.25 Ectoparasites",
-      "7. Sketchy Micro: Parasites group — open the Parasites module and watch all videos in order (watch TWICE each)",
+      "7. Sketchy Micro: Parasites group — open the Parasites module and watch all videos in order (watch TWICE each) · part of the 29-video, 3.5 hr Fungi + Parasites block",
       "8. First Aid Microbiology: parasite tables (20 min checklist)",
       "9. Pharm tie-in: metronidazole · albendazole/mebendazole · praziquantel · ivermectin — mechanisms each",
       "10. AnKing: new cards — Parasites tag",
       "11. Qbank: 20 questions + weakness log",
     ]},
-    {id:"d2l",label:"Aug 7 Fri — Antibiotics",tasks:[
+    {id:"rest10",mins:20,label:"Aug 6 Thu — Buffer / catch-up day",tasks:[
+      "AnKing: due reviews — keep the streak alive",
+      "Optional: catch up on any missed AnKing new cards from this week",
+      "Optional: light Qbank review of flagged weak topics",
+      "No new Bootcamp/Sketchy content required today — this day exists so you never fall behind",
+    ]},
+    {id:"d2l",mins:165,label:"Aug 7 Fri — Antibiotics",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Microbiology: Ch.36 Antibiotics",
-      "3. Sketchy Pharmacology: Antimicrobials group — open the Antimicrobials module and watch all videos in order (watch TWICE each)",
+      "3. Sketchy Pharmacology: Antimicrobials group — open the Antimicrobials module and watch all videos in order (watch TWICE each) · 28 videos, 4 hrs at 1.25x",
       "4. First Aid Pharmacology: antibiotic tables (20 min checklist)",
       "5. Know by category: cell wall (beta-lactams · vancomycin · bacitracin) · 30S (aminoglycosides · tetracyclines) · 50S (macrolides · linezolid · clindamycin · chloramphenicol) · DNA/RNA (fluoroquinolones · rifampin · metronidazole) · folate (sulfonamides · trimethoprim)",
       "6. For every class: mechanism + major toxicity + resistance mechanism",
       "7. AnKing: new cards — antibiotic tag",
       "8. Qbank: 20 questions + weakness log",
     ]},
-    {id:"d2m",label:"Aug 8 Sat — Antifungals + antiparasitics + antivirals",tasks:[
+    {id:"d2m",mins:225,label:"Aug 8 Sat — Antifungals + antiparasitics + antivirals + Micro/Pharm consolidation",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Microbiology: Ch.37 Antifungals",
       "3. Bootcamp Microbiology: Ch.38 Antiparasitics",
@@ -510,52 +549,66 @@ const PHASES = [
       "5. Sketchy Pharmacology: Antimicrobials group — continue with antifungal · antiviral · antiparasitic videos in order (watch TWICE each)",
       "6. First Aid Pharmacology: antifungal · antiviral · antiparasitic sections (20 min checklist)",
       "7. For every class: mechanism + major toxicity + contraindication + resistance",
-      "8. LIMIT new cards today — vacation in 2 days",
-      "9. Qbank: 20 questions + weakness log",
+      "8. LIMIT new cards today — internship starts in 2 days",
+      "9. Qbank: 30 mixed micro/pharm questions + weakness log",
       "10. ⭐ Saturday rule: go through all weakness log entries from this week",
+      "11. ⭐ Consolidation: quiz yourself — cover treatment column → reproduce from organism name only, across all of Ch.1–39",
+      "12. ⭐ Build final missed-organism list + drug-class toxicity list before internship starts",
     ]},
-    {id:"d2n",label:"Aug 9 Sun — ⭐ Micro/Pharm REVIEW DAY",tasks:[
-      "1. AnKing: due reviews",
-      "2. Review Bootcamp Microbiology Ch.1–39 + all antimicrobials — no new videos",
-      "3. First Aid Microbiology + Pharmacology: full tables sweep (checklist)",
-      "4. Quiz: cover treatment column → reproduce from organism name only",
-      "5. Build: missed-organism list + drug-class toxicity list",
-      "6. STOP large new card batches — vacation starts tomorrow",
-      "7. Qbank: 40 mixed micro/pharm questions + weakness log review",
+    {id:"rest11",mins:20,label:"Aug 9 Sun — Buffer / catch-up day",tasks:[
+      "AnKing: due reviews — keep the streak alive",
+      "Optional: catch up on any missed AnKing new cards from this week",
+      "Optional: light Qbank review of flagged weak topics from all of Phase 2",
+      "No new Bootcamp/Sketchy content required today — use this day to feel ready before the internship starts tomorrow",
     ]},
   ]},
-  {id:"vac3",color:"#B45309",type:"vacation",label:"Vacation",dates:"Aug 10–24",note:"AnKing reviews ONLY · Prioritize Microbiology + Antimicrobial Pharm reviews · No new cards",days:[
-    {id:"vac3a",label:"Aug 10–24 — Vacation (15 days)",tasks:[
-      "AnKing: due reviews only, every day",
-      "No new cards. Prioritize: Microbiology + Antimicrobial Pharm reviews",
-      "Goal: no backlog explosion. Return ready for Cardio/Pulm/Renal.",
+  {id:"vac3",color:"#7C3AED",type:"vacation",label:"🏥 Orthopedic Surgery Internship 1",dates:"Aug 10–24",note:"AnKing reviews only for Micro/Pharm · Self-paced MSK anatomy + ortho pathology checklist below — no fixed daily quota, fit around internship hours",days:[
+    {id:"vac3a",label:"Aug 10–24 — Internship + self-paced MSK review (15 days)",tasks:[
+      "AnKing: due reviews only, every day — Micro + Antimicrobial Pharm decks",
+      "No new Micro/Pharm cards. Goal: no backlog explosion for Phase 3.",
+      "— MSK ANATOMY + PATHOLOGY CHECKLIST (work through whenever you have time) —",
+      "☐ Bootcamp MSK/Rheum Ch.1 Skeletal Muscle — fiber types, contraction mechanism",
+      "☐ Bootcamp MSK/Rheum Ch.7 Spine — vertebral levels, spinal cord relationships, disc herniation patterns",
+      "☐ Bootcamp MSK/Rheum Ch.8 Brachial Plexus — roots/trunks/divisions/cords/branches, common injury patterns (Erb's, Klumpke's, wrist drop)",
+      "☐ Bootcamp MSK/Rheum Ch.9 Shoulder and Elbow — rotator cuff, common fractures/dislocations, nerve at risk with each",
+      "☐ Bootcamp MSK/Rheum Ch.10 Wrist and Hand — carpal bones, carpal tunnel, scaphoid fracture risk (AVN), tendon zones",
+      "☐ Bootcamp MSK/Rheum Ch.11 Lower Extremity Nerves — sciatic, femoral, obturator, peroneal — motor/sensory + injury patterns (foot drop)",
+      "☐ Bootcamp MSK/Rheum Ch.12 Hip & Knee — hip fracture types + blood supply/AVN risk, knee ligaments (ACL/PCL/MCL/LCL), meniscus",
+      "☐ Bootcamp MSK/Rheum Ch.13 Foot & Ankle — ankle ligaments, common fracture patterns (Weber classification), compartments",
+      "☐ Bootcamp MSK/Rheum Ch.5 Primary Bone Tumors — benign vs malignant, age groups, classic locations/imaging",
+      "☐ Bootcamp MSK/Rheum Ch.14 Childhood MSK Pathology — SCFE, Legg-Calve-Perthes, developmental dysplasia of hip",
+      "☐ Know cold: compartment syndrome — 6 P's, which compartments, fasciotomy urgency",
+      "☐ Know cold: open fracture classification (Gustilo-Anderson) and why timing to OR matters",
+      "☐ Know cold: nerve injury classification — neurapraxia vs axonotmesis vs neurotmesis",
+      "☐ For every joint: review common surgical approach landmarks (what structures are at risk)",
+      "Goal: walk into rounds/cases able to name the structure, the injury pattern, and the nerve/vessel at risk.",
     ]},
   ]},
   {id:"p3",color:"#047857",priority:true,type:"study",label:"Phase 3 — Physiology → Pathophysiology → Pharm: Cardio, Pulm, Renal",dates:"Aug 25 – Sep 5",note:"⭐ Physiology ALWAYS before pathology · Formula: normal → disease → compensation → drug · STOP cards Sep 5",days:[
-    {id:"d3a",label:"Aug 25 Tue — Cardio physiology 1: embryology, anatomy, vascular system, PV loops",tasks:[
+    {id:"d3a",mins:165,label:"Aug 25 Tue — Cardio physiology 1: embryology, anatomy, vascular system, PV loops",tasks:[
       "1. AnKing: due reviews (60–75 min) — clear any vacation backlog first",
       "2. Bootcamp Cardiology: Ch.1 Embryology and Anatomy + Ch.2 (same chapter group)",
       "3. Bootcamp Cardiology: Ch.3 Vascular System and Cardiac Parameters + Ch.4 (same chapter group)",
-      "4. Bootcamp Cardiology: Ch.5 Cardiac Function and PV Loops + Ch.6 (same chapter group)",
+      "4. Bootcamp Cardiology: Ch.5 + 6 Cardiac Function Curves, Pressure Volume Loops + Ch.6 (same chapter group)",
       "5. First Aid Cardiology: cardiac physiology section (20 min checklist)",
       "6. Know: preload · afterload · contractility · Frank-Starling curve · PV loop shifts",
       "7. Draw: normal PV loop from memory — then add effect of increased afterload",
       "8. AnKing: new cards — Cardiology physiology tag",
       "9. Qbank: 15–20 questions + weakness log",
     ]},
-    {id:"d3b",label:"Aug 26 Wed — Cardio physiology 2: vasodilation, cardiac cycle, RAAS, conduction",tasks:[
+    {id:"d3b",mins:240,label:"Aug 26 Wed — Cardio physiology 2: vasodilation, cardiac cycle, RAAS, conduction",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Cardiology: Ch.7 Vasodilation and Vasoconstriction + Ch.8 Pressure Flow Physiology",
       "3. Bootcamp Cardiology: Ch.9 Cardiac Cycle",
       "4. Bootcamp Cardiology: Ch.10 RAAS",
       "5. Bootcamp Cardiology: Ch.11 Exercise and Cardiac Conductive Physiology + Ch.12 (same chapter group)",
-      "6. Sketchy Pharmacology: Cardiovascular and Renal group — open the Cardiovascular and Renal module and watch all videos in order (watch TWICE each)",
+      "6. Sketchy Pharmacology: Cardiovascular and Renal group — open the Cardiovascular and Renal module and watch all videos in order (watch TWICE each) · 21 videos, 6 hrs at 1.25x (combined with Autonomic Drugs day total)",
       "7. First Aid Cardiology: RAAS + cardiac cycle (20 min checklist)",
       "8. Know RAAS step by step: renin → Ang I → ACE → Ang II → aldosterone → effect",
       "9. AnKing: new cards",
       "10. Qbank: 15–20 questions + weakness log",
     ]},
-    {id:"d3c",label:"Aug 27 Thu — Cardio pathophysiology 1: antiarrhythmics + arrhythmias + conduction block",tasks:[
+    {id:"d3c",mins:165,label:"Aug 27 Thu — Cardio pathophysiology 1: antiarrhythmics + arrhythmias + conduction block",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Cardiology: Ch.13 Antiarrhythmics",
       "3. Bootcamp Cardiology: Ch.14 Atrial and Ventricular Arrhythmias + Ch.15 (same chapter group)",
@@ -565,7 +618,7 @@ const PHASES = [
       "7. AnKing: new cards",
       "8. Qbank: 20 questions + weakness log",
     ]},
-    {id:"d3d",label:"Aug 28 Fri — Cardio pathophysiology 2: HF, cardiomyopathy, HTN, shock",tasks:[
+    {id:"d3d",mins:195,label:"Aug 28 Fri — Cardio pathophysiology 2: HF, cardiomyopathy, HTN, shock",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Cardiology: Ch.17 Heart Failure",
       "3. Bootcamp Cardiology: Ch.18 Cardiomyopathy",
@@ -577,7 +630,7 @@ const PHASES = [
       "9. AnKing: new cards",
       "10. Qbank: 20 questions + weakness log",
     ]},
-    {id:"d3e",label:"Aug 29 Sat — Cardio pathophysiology 3: ischemia, aortic, valvular, congenital",tasks:[
+    {id:"d3e",mins:240,label:"Aug 29 Sat — Cardio pathophysiology 3: ischemia, aortic, valvular, congenital",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Cardiology: Ch.23 Stable Angina and Atherosclerosis",
       "3. Bootcamp Cardiology: Ch.24 Myocardial Infarction",
@@ -592,10 +645,10 @@ const PHASES = [
       "12. Qbank: 30–40 mixed cardio questions",
       "13. ⭐ Saturday rule: go through all weakness log entries from this week",
     ]},
-    {id:"d3f",label:"Aug 30 Sun — Pulmonary physiology: introduction, air, blood",tasks:[
+    {id:"d3f",mins:165,label:"Aug 30 Sun — Pulmonary physiology: introduction, air, blood",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Pulmonology: Ch.1 Introduction",
-      "3. Bootcamp Pulmonology: Ch.2 Air",
+      "3. Bootcamp Pulmonology: Ch.2 Air Physiology",
       "4. Bootcamp Pulmonology: Ch.3 Blood Physiology",
       "5. First Aid Pulmonology: physiology section (20 min checklist)",
       "6. Know: TLC · FRC · RV · ERV · IRV · TV · V/Q mismatch · A-a gradient · oxygenation vs ventilation",
@@ -603,7 +656,7 @@ const PHASES = [
       "8. AnKing: new cards — Pulm tag",
       "9. Qbank: 15–20 questions + weakness log",
     ]},
-    {id:"d3g",label:"Aug 31 Mon — Pulmonary pathophysiology: obstructive + restrictive + lung cancer",tasks:[
+    {id:"d3g",mins:195,label:"Aug 31 Mon — Pulmonary pathophysiology: obstructive + restrictive + lung cancer",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Pulmonology: Ch.4 Lung Pathology Fundamentals",
       "3. Bootcamp Pulmonology: Ch.5 Obstructive Lung Disease",
@@ -616,7 +669,7 @@ const PHASES = [
       "10. AnKing: new cards",
       "11. Qbank: 20 questions + weakness log",
     ]},
-    {id:"d3h",label:"Sep 1 Tue — Pulmonary special topics + review",tasks:[
+    {id:"d3h",mins:135,label:"Sep 1 Tue — Pulmonary special topics + review",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Pulmonology: Ch.8 Lung Pathology Special Topics",
       "3. First Aid Pulmonology: PE · ARDS · pulmonary HTN · pleural effusions (20 min checklist)",
@@ -625,7 +678,7 @@ const PHASES = [
       "6. AnKing: new cards",
       "7. Qbank: 30 mixed pulm questions + weakness log",
     ]},
-    {id:"d3i",label:"Sep 2 Wed — Renal physiology: anatomy, filtration, nephron transporters, RAAS",tasks:[
+    {id:"d3i",mins:195,label:"Sep 2 Wed — Renal physiology: anatomy, filtration, nephron transporters, RAAS",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Nephrology: Ch.1 Anatomy and Embryology",
       "3. Bootcamp Nephrology: Ch.2 Fluid and Filtration",
@@ -638,7 +691,7 @@ const PHASES = [
       "10. AnKing: new cards — Renal tag",
       "11. Qbank: 15–20 questions + weakness log",
     ]},
-    {id:"d3j",label:"Sep 3 Thu — Renal physiology 2: electrolytes + acid-base",tasks:[
+    {id:"d3j",mins:150,label:"Sep 3 Thu — Renal physiology 2: electrolytes + acid-base",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Nephrology: Ch.5 Electrolytes",
       "3. Bootcamp Nephrology: Ch.6 Acid Base Physiology",
@@ -651,7 +704,7 @@ const PHASES = [
       "10. Qbank: 20 questions + weakness log",
       "11. ⭐ Saturday rule: go through all weakness log entries from this week",
     ]},
-    {id:"d3k",label:"Sep 4 Fri — Renal pathophysiology: nephrotic + nephritic + kidney injury",tasks:[
+    {id:"d3k",mins:165,label:"Sep 4 Fri — Renal pathophysiology: nephrotic + nephritic + kidney injury",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Nephrology: Ch.7 Pathology Diagnostics + Ch.8 Nephrotic Syndromes",
       "3. Bootcamp Nephrology: Ch.9 Nephritic Syndromes",
@@ -663,7 +716,7 @@ const PHASES = [
       "9. AnKing: new cards",
       "10. Qbank: 20 questions + weakness log",
     ]},
-    {id:"d3l",label:"Sep 5 Sat — Renal pharm + stones + integrated review",tasks:[
+    {id:"d3l",mins:240,label:"Sep 5 Sat — Renal pharm + stones + integrated review",tasks:[
       "1. AnKing: due reviews",
       "2. Bootcamp Nephrology: Ch.10 Nephrolithiasis",
       "3. Bootcamp Nephrology: Ch.11 Urinary Incontinence",
@@ -678,26 +731,37 @@ const PHASES = [
       "12. ⭐ Saturday rule: go through all weakness log entries — final Phase 3 sweep",
     ]},
   ]},
-  {id:"vac4",color:"#B45309",type:"vacation",label:"Vacation",dates:"Sep 6–24",note:"AnKing reviews ONLY · Prioritize physiology/pathophysiology + pharm reviews · No new cards",days:[
-    {id:"vac4a",label:"Sep 6–24 — Vacation (19 days)",tasks:[
-      "AnKing: due reviews only, every day",
-      "No new cards. Prioritize: physiology/pathophys and pharmacology reviews",
-      "Goal: preserve foundation before Year 3 starts September 28",
+  {id:"vac4",color:"#7C3AED",type:"vacation",label:"🏥 Orthopedic Surgery Internship 2",dates:"Sep 6–24",note:"AnKing reviews only for Cardio/Pulm/Renal/Pharm · Self-paced MSK checklist continues — no fixed daily quota",days:[
+    {id:"vac4a",label:"Sep 6–24 — Internship + self-paced MSK review (19 days)",tasks:[
+      "AnKing: due reviews only, every day — Cardio/Pulm/Renal/Pharm decks",
+      "No new cards. Goal: preserve foundation before Year 3 starts September 28.",
+      "— MSK ANATOMY + PATHOLOGY CHECKLIST CONTINUED (whatever wasn't finished in Internship 1) —",
+      "☐ Bootcamp MSK/Rheum Ch.2 Non-Rheumatologic Diseases",
+      "☐ Bootcamp MSK/Rheum Ch.3 Rheumatologic Diseases — key for peri-op medical clearance discussions",
+      "☐ Bootcamp MSK/Rheum Ch.4 Seronegative Spondyloarthritis",
+      "☐ Bootcamp MSK/Rheum Ch.6 Vasculitides",
+      "☐ Bootcamp MSK/Rheum Ch.15 Pharmacology — NSAIDs, perioperative anticoagulation holds, bone-related drugs",
+      "☐ Review: common ortho emergencies — septic joint, compartment syndrome, open fracture, cauda equina",
+      "☐ Review: classic imaging findings — Salter-Harris classification (pediatric), Ottawa ankle/knee rules",
+      "☐ Review: post-op complications — DVT/PE risk, fat embolism syndrome, infection",
+      "☐ Make a one-page cheat sheet: for each major joint — approach, structures at risk, most common fracture pattern",
+      "☐ Final self-check: can you describe the nerve/vessel at risk for the 5 most common ortho procedures you saw?",
+      "Goal: leave the second internship able to confidently discuss anatomy and management on rounds.",
     ]},
   ]},
   {id:"p4",color:"#0F766E",type:"study",label:"Phase 4 — Pre-Year 3 Launch",dates:"Sep 25–27 · Year 3 begins Sep 28",note:"Light review + system setup only — NOT for new content",days:[
-    {id:"d4a",label:"Sep 25 Fri — Pathology + heme/coag review",tasks:[
+    {id:"d4a",mins:240,label:"Sep 25 Fri — Pathology + heme/coag review",tasks:[
       "1. AnKing: due reviews (clear any backlog first)",
       "2. Bootcamp Hematology/Oncology: Ch.2 Blood Cells",
       "3. Bootcamp Hematology/Oncology: Ch.6 Platelets",
       "4. Bootcamp Hematology/Oncology: Ch.7 Coagulation and Fibrinolysis",
-      "5. Sketchy Pharmacology: Blood and Inflammation group + Smooth Muscle group — open each module and watch all videos in order (consolidation pass)",
+      "5. Sketchy Pharmacology: Blood and Inflammation group + Smooth Muscle group — open each module and watch all videos in order (consolidation pass) · 17 videos, 4.75 hrs at 1.25x combined",
       "6. First Aid Hematology: heme/coag tables (20 min checklist)",
       "7. Review General Pathology: cell injury · inflammation · hemodynamics · thrombosis · shock · neoplasia",
       "8. Build coagulation cascade from memory: intrinsic vs extrinsic vs common pathway",
       "9. Qbank: 30–40 mixed path/heme questions",
     ]},
-    {id:"d4b",label:"Sep 26 Sat — Pharmacology master review",tasks:[
+    {id:"d4b",mins:180,label:"Sep 26 Sat — Pharmacology master review",tasks:[
       "1. AnKing: due reviews",
       "2. Sketchy Pharmacology: Pharmacology Foundations group + Autonomic Drugs group + Antimicrobials group + Cardiovascular and Renal group — re-watch consolidation pass (select weak videos only)",
       "3. Review Bootcamp Pharmacology: Ch.1 Pharmacodynamics · Ch.2 Pharmacokinetics · Ch.3 Autonomic System · Ch.4 Side Effects and Toxins",
@@ -706,7 +770,7 @@ const PHASES = [
       "6. Qbank: 30–40 pharm questions",
       "7. ⭐ Saturday rule: final summer-wide weakness log sweep",
     ]},
-    {id:"d4c",label:"Sep 27 Sun — Year 3 readiness",tasks:[
+    {id:"d4c",mins:165,label:"Sep 27 Sun — Year 3 readiness",tasks:[
       "1. AnKing: light reviews only",
       "2. Rapid review: Microbiology Ch.1–39 weak list",
       "3. Rapid review: Cardio/Pulm/Renal physio-pathophys maps",
@@ -730,6 +794,7 @@ let weaknessLog = {};     // { phaseId: [ {text, date} ] }
 let openPhase = null;
 let openDay = null;
 let currentView = 'tracker';
+let selectedCalDate = null;
 let originalPhasesSnapshot = null; // deep copy for undo
 
 const DAILY_ORDER=[
@@ -742,25 +807,19 @@ const DAILY_ORDER=[
 ];
 
 const OVERVIEW_TEMPLATE=[
-  {c:"#334155",id:"p0",l:"Phase 0"},
-  {c:"#B45309",id:"vac1",l:"Vacation"},
   {c:"#5C54D4",id:"p1",l:"Phase 1 ⭐"},
-  {c:"#B45309",id:"vac2",l:"Vacation"},
   {c:"#B91C1C",id:"p2",l:"Phase 2 ⭐"},
-  {c:"#B45309",id:"vac3",l:"Vacation"},
+  {c:"#7C3AED",id:"vac3",l:"🏥 Ortho Internship 1"},
   {c:"#047857",id:"p3",l:"Phase 3 ⭐"},
-  {c:"#B45309",id:"vac4",l:"Vacation"},
+  {c:"#7C3AED",id:"vac4",l:"🏥 Ortho Internship 2"},
   {c:"#0F766E",id:"p4",l:"Phase 4"},
 ];
 const OVERVIEW_DESC={
-  p0:"Setup. Cell injury, necrosis, apoptosis. Bootcamp Pathology Ch.1 + Immunology Ch.3 Inflammatory Response.",
-  vac1:"AnKing reviews only.",
-  p1:"General pathology: hemodynamics, thrombosis, shock, neoplasia. Immunology Ch.1–13. Pharm Ch.1–3 + Sketchy Autonomic Drugs module.",
-  vac2:"AnKing reviews only.",
+  p1:"Setup + General pathology + Immunology + Pharm foundations. Cell injury through neoplasia. Immunology Ch.1–13. Pharm Ch.1–3 + Sketchy Autonomic Drugs module.",
   p2:"Bootcamp Micro Ch.1–39 in order. Sketchy Micro: Bacteria · RNA Viruses · DNA Viruses · Fungi · Parasites modules. Sketchy Pharm: Antimicrobials module.",
-  vac3:"AnKing reviews only.",
+  vac3:"Orthopedic Surgery internship. AnKing reviews only for Micro/Pharm. Self-paced MSK anatomy + ortho pathology checklist — no fixed quota, fit around internship hours.",
   p3:"Bootcamp Cardiology Ch.1–28 (5 days) → Pulmonology Ch.1–8 (3 days) → Nephrology Ch.1–15 (3 days). Physiology always before pathology. Sketchy Pharm: Cardiovascular and Renal module.",
-  vac4:"AnKing reviews only.",
+  vac4:"Orthopedic Surgery internship. AnKing reviews only for Cardio/Pulm/Renal/Pharm. MSK checklist continues from Internship 1.",
   p4:"Light review: Bootcamp Heme/Onc Ch.2·6·7 + Sketchy Pharm consolidation. Pharm master review. Year 3 workflow setup. Year 3 starts Sep 28.",
 };
 
@@ -769,8 +828,8 @@ const OVERVIEW_DESC={
 // ═══════════════════════════════════════════════════════════
 function load(){ try{const s=localStorage.getItem('sp_v5'); if(s) checked=JSON.parse(s);}catch(e){} }
 function save(){ try{localStorage.setItem('sp_v5',JSON.stringify(checked));}catch(e){} }
-function saveSchedule(){ try{localStorage.setItem('sp_sched_v1',JSON.stringify(schedule));}catch(e){} }
-function loadSchedule(){ try{const s=localStorage.getItem('sp_sched_v1'); if(s) schedule=JSON.parse(s);}catch(e){} }
+function saveSchedule(){ try{localStorage.setItem('sp_sched_v2',JSON.stringify(schedule));}catch(e){} }
+function loadSchedule(){ try{const s=localStorage.getItem('sp_sched_v2'); if(s) schedule=JSON.parse(s);}catch(e){} }
 function saveWeakness(){ try{localStorage.setItem('sp_weakness_v1',JSON.stringify(weaknessLog));}catch(e){} }
 function loadWeakness(){ try{const s=localStorage.getItem('sp_weakness_v1'); if(s) weaknessLog=JSON.parse(s);}catch(e){} }
 function savePhasesMeta(){
@@ -779,11 +838,11 @@ function savePhasesMeta(){
   PHASES.forEach(p=>{
     meta[p.id]={dates:p.dates,note:p.note,days:p.days.map(d=>({id:d.id,label:d.label}))};
   });
-  try{localStorage.setItem('sp_phasemeta_v1',JSON.stringify(meta));}catch(e){}
+  try{localStorage.setItem('sp_phasemeta_v2',JSON.stringify(meta));}catch(e){}
 }
 function loadPhasesMeta(){
   try{
-    const s=localStorage.getItem('sp_phasemeta_v1');
+    const s=localStorage.getItem('sp_phasemeta_v2');
     if(!s) return;
     const meta=JSON.parse(s);
     PHASES.forEach(p=>{
@@ -944,9 +1003,25 @@ function isVacationToday(){
   return VACATION_RANGES.some(([s,e])=>today>=s&&today<=e);
 }
 
+function isInternshipToday(){
+  const today=todayISO();
+  const internshipRanges=[['2026-08-10','2026-08-24'],['2026-09-06','2026-09-24']];
+  return internshipRanges.some(([s,e])=>today>=s&&today<=e);
+}
+
 function renderTodayBanner(){
   const el=document.getElementById('today-banner');
   const today=todayISO();
+
+  if(isInternshipToday()){
+    el.className='today-banner today-banner-vacation';
+    el.style.setProperty('--pc','#7C3AED');
+    el.innerHTML=`
+      <div class="today-banner-label" style="color:#7C3AED">Today · ${fmtDate(today)}</div>
+      <div class="today-banner-title">🏥 Orthopedic Surgery Internship</div>
+      <div class="today-banner-sub">AnKing due reviews only for content decks · self-paced MSK checklist — fit around your hours today</div>`;
+    return;
+  }
 
   if(isVacationToday()){
     el.className='today-banner today-banner-vacation';
@@ -966,7 +1041,7 @@ function renderTodayBanner(){
     el.innerHTML=`
       <div class="today-banner-label">Today · ${fmtDate(today)}</div>
       <div class="today-banner-empty">${
-        beforeStart ? 'Plan starts June 24 — nothing scheduled yet.' :
+        beforeStart ? 'Plan starts July 4 — nothing scheduled yet.' :
         afterEnd ? '🎓 Plan period complete — Year 3 is underway.' :
         'No day scheduled for today. Tap ⚖️ Rebalance to fix the schedule.'
       }</div>`;
@@ -986,6 +1061,7 @@ function renderTodayBanner(){
     <div class="today-banner-title">${titlePart}</div>
     <div class="today-banner-sub">
       <span>${done}/${total} tasks complete</span>
+      ${day.mins?`<span class="cal-day-popup-time" style="margin-left:8px;padding:2px 8px">⏱ ~${day.mins} min</span>`:''}
       <span class="today-banner-arrow">→</span>
     </div>
     <div class="today-banner-progress">${dots}</div>`;
@@ -1014,11 +1090,12 @@ function jumpToToday(){
 // ═══════════════════════════════════════════════════════════
 function showView(v){
   currentView=v;
-  ['tracker','order','overview'].forEach(n=>{
+  ['tracker','calendar','order','overview'].forEach(n=>{
     document.getElementById('view-'+n).style.display=n===v?'block':'none';
     const b=document.getElementById('btn-'+n);
     if(b) b.className=n===v?'active':'inactive';
   });
+  if(v==='calendar') renderCalendar();
 }
 
 function resetAll(){
@@ -1183,6 +1260,211 @@ function renderOrder(){
 }
 
 // ═══════════════════════════════════════════════════════════
+// CALENDAR RENDER
+// ═══════════════════════════════════════════════════════════
+function getDayById(dayId){
+  for(const phase of PHASES){
+    const d=phase.days.find(d=>d.id===dayId);
+    if(d) return {day:d, phase};
+  }
+  return null;
+}
+
+function getScheduleForDate(dateStr){
+  // Return {dayId, phase} for this date, or null
+  for(const [id,date] of Object.entries(schedule)){
+    if(date===dateStr){
+      const found=getDayById(id);
+      if(found) return found;
+    }
+  }
+  // Check internship ranges specifically (vac3, vac4 are real internships with fixed dates)
+  const internshipMap=[
+    {id:'vac3', start:'2026-08-10', end:'2026-08-24'},
+    {id:'vac4', start:'2026-09-06', end:'2026-09-24'},
+  ];
+  for(const {id,start,end} of internshipMap){
+    if(dateStr>=start && dateStr<=end){
+      const phase=PHASES.find(p=>p.id===id);
+      if(phase) return {day:null, phase, isVacation:true};
+    }
+  }
+  return null;
+}
+
+function renderCalendar(){
+  const today=todayISO();
+  const months=[
+    {y:2026,m:7,name:'July 2026'},
+    {y:2026,m:8,name:'August 2026'},
+    {y:2026,m:9,name:'September 2026'},
+  ];
+
+  let html='';
+  months.forEach(({y,m,name})=>{
+    const firstDay=new Date(y,m-1,1);
+    const daysInMonth=new Date(y,m,0).getDate();
+    const startWeekday=firstDay.getDay(); // 0=Sun
+
+    html+=`<div class="cal-month"><div class="cal-month-title">${name}</div><div class="cal-grid">`;
+    ['S','M','T','W','T','F','S'].forEach(d=>{ html+=`<div class="cal-dow">${d}</div>`; });
+
+    for(let i=0;i<startWeekday;i++){ html+=`<div class="cal-cell empty"></div>`; }
+
+    for(let day=1;day<=daysInMonth;day++){
+      const dateStr=`${y}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      const isToday=dateStr===today;
+      const info=getScheduleForDate(dateStr);
+
+      let bg='#F8FAFC', textColor='#94A3B8', mins='', dotColor='';
+      if(info){
+        if(info.isVacation){
+          bg=rgba(info.phase.color,0.18); textColor=info.phase.color; dotColor=info.phase.color;
+        } else if(info.day){
+          const color=info.phase.color;
+          const dayComplete=dayDone(info.day)===info.day.tasks.length;
+          bg=dayComplete?rgba(color,0.35):rgba(color,0.15);
+          textColor=color;
+          dotColor=color;
+          if(info.day.mins) mins=info.day.mins+'m';
+        }
+      }
+
+      html+=`<div class="cal-cell${isToday?' today':''}" style="background:${bg};color:${textColor}"
+        onclick="goToCalendarDay('${dateStr}')">
+        <div class="cal-cell-num">${day}</div>
+        ${dotColor?`<div class="cal-cell-dot" style="background:${dotColor}"></div>`:''}
+        ${mins?`<div class="cal-cell-mins">${mins}</div>`:''}
+      </div>`;
+    }
+    html+=`</div></div>`;
+  });
+
+  // Legend
+  html+=`<div class="cal-month"><div class="cal-legend">`;
+  const legendItems=[
+    {c:'#5C54D4',l:'Phase 1 — Path/Immuno/Pharm'},
+    {c:'#B91C1C',l:'Phase 2 — Microbiology'},
+    {c:'#7C3AED',l:'Ortho Internships'},
+    {c:'#047857',l:'Phase 3 — Cardio/Pulm/Renal'},
+    {c:'#0F766E',l:'Phase 4 — Launch'},
+    {c:'#B45309',l:'Rest / buffer day'},
+  ];
+  legendItems.forEach(({c,l})=>{
+    html+=`<div class="cal-legend-item"><div class="cal-legend-dot" style="background:${c}"></div>${l}</div>`;
+  });
+  html+=`</div></div>`;
+
+  // Selected day detail (default: today)
+  html+=`<div id="cal-day-detail"></div>`;
+
+  document.getElementById('view-calendar').innerHTML=html;
+  showCalDayDetail(selectedCalDate || today);
+}
+
+function showCalDayDetail(dateStr){
+  selectedCalDate=dateStr;
+  const el=document.getElementById('cal-day-detail');
+  if(!el) return;
+  const info=getScheduleForDate(dateStr);
+  const dateLabel=fmtDateLong(dateStr);
+
+  if(!info){
+    el.innerHTML=`<div class="cal-day-popup"><div class="cal-day-popup-date">${dateLabel}</div><div style="color:#94A3B8;font-size:13px">Outside the study plan window.</div></div>`;
+    return;
+  }
+
+  if(info.isVacation){
+    el.innerHTML=`<div class="cal-day-popup" style="border-left-color:${info.phase.color}">
+      <div class="cal-day-popup-date" style="color:${info.phase.color}">${dateLabel}</div>
+      <div class="cal-day-popup-title">${info.phase.label}</div>
+      <div style="font-size:13px;color:#475569;margin-bottom:10px">${info.phase.note}</div>
+      <div style="font-size:12px;color:${info.phase.color};font-weight:600;cursor:pointer" onclick="showView('tracker');togglePhaseAndDay('${info.phase.id}','${info.phase.days[0].id}')">View full checklist in Tracker →</div>
+    </div>`;
+    return;
+  }
+
+  if(info.day){
+    const day=info.day, phase=info.phase;
+    const done=dayDone(day), total=day.tasks.length;
+    const titlePart=day.label.replace(/^\S+ \d+ \S+(\s\(S\d+\/\d+\))? — /,'');
+    const color=phase.color;
+
+    const taskRows=day.tasks.map((task,i)=>{
+      const tid=`${day.id}_${i}`;
+      const isDone=!!checked[tid];
+      return `<div class="task" onclick="toggleCalTask('${tid}','${dateStr}')">
+        <div class="task-box${isDone?' done':''}" id="calbox-${tid}" style="--pc:${color};${isDone?`background:${color};border-color:${color}`:''}">
+          ${isDone?'<span>✓</span>':''}
+        </div>
+        <span class="task-text${isDone?' done':''}" id="caltxt-${tid}">${task}</span>
+      </div>`;
+    }).join('');
+
+    el.innerHTML=`<div class="cal-day-popup" style="border-left-color:${color}">
+      <div class="cal-day-popup-date" style="color:${color}">${dateLabel} · ${phase.label.replace(/⭐|🏥/g,'').trim()}</div>
+      <div class="cal-day-popup-title">${titlePart}</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        ${day.mins?`<span class="cal-day-popup-time">⏱ ~${day.mins} min</span>`:''}
+        <span id="caldone-${day.id}" style="font-size:12px;color:#64748B;font-weight:600">${done}/${total} complete</span>
+      </div>
+      <div style="background:#F8FAFC;border-radius:12px;padding:6px 8px">${taskRows}</div>
+    </div>`;
+  }
+}
+
+function toggleCalTask(tid,dateStr){
+  toggleTask(tid); // reuses existing logic — updates checked{}, saves, updates tracker elements if open
+  // Update the calendar's own copy of this task row
+  const box=document.getElementById('calbox-'+tid), txt=document.getElementById('caltxt-'+tid);
+  const dayId=tid.split('_').slice(0,-1).join('_');
+  const found=getDayById(dayId);
+  if(box && found){
+    const color=found.phase.color;
+    box.className='task-box'+(checked[tid]?' done':'');
+    box.style.setProperty('--pc',color);
+    if(checked[tid]){ box.style.background=color; box.style.borderColor=color; box.innerHTML='<span>✓</span>'; }
+    else { box.style.background='white'; box.style.borderColor='#CBD5E1'; box.innerHTML=''; }
+  }
+  if(txt){ txt.className='task-text'+(checked[tid]?' done':''); }
+  // Update the completion count shown in the popup
+  if(found){
+    const doneEl=document.getElementById('caldone-'+dayId);
+    if(doneEl) doneEl.textContent=`${dayDone(found.day)}/${found.day.tasks.length} complete`;
+  }
+  // Refresh the calendar grid cell coloring (day may now be fully complete)
+  renderCalendar();
+  showCalDayDetail(dateStr);
+}
+
+function togglePhaseAndDay(phaseId,dayId){
+  openPhase=phaseId;
+  openDay=dayId;
+  renderTracker();
+  setTimeout(()=>{
+    const el=document.getElementById('day-'+dayId);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
+  },50);
+}
+
+function goToCalendarDay(dateStr){
+  const info=getScheduleForDate(dateStr);
+  if(!info){ return; } // outside plan window, nothing to open
+
+  if(info.isVacation){
+    // Internship/vacation block — open that phase (first day) in the Tracker
+    showView('tracker');
+    togglePhaseAndDay(info.phase.id, info.phase.days[0].id);
+    return;
+  }
+
+  if(info.day){
+    showView('tracker');
+    togglePhaseAndDay(info.phase.id, info.day.id);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
 // OVERVIEW RENDER — now dynamic, synced with actual PHASES data
 // ═══════════════════════════════════════════════════════════
 function renderOverview(){
@@ -1216,20 +1498,18 @@ function renderAll(){
 const ALL_STUDY_DAYS = PHASES.filter(p=>p.type==='study').flatMap(p=>p.days);
 
 const VACATION_RANGES = [
-  ['2026-06-27','2026-06-29'],
-  ['2026-07-14','2026-07-26'],
   ['2026-08-10','2026-08-24'],
   ['2026-09-06','2026-09-24'],
 ];
 
 const ORIGINAL_DATES = [
-  '2026-06-24','2026-06-25','2026-06-26',
-  '2026-06-30','2026-07-01','2026-07-02','2026-07-03','2026-07-04','2026-07-05',
-  '2026-07-06','2026-07-07','2026-07-08','2026-07-09','2026-07-10','2026-07-11',
-  '2026-07-12','2026-07-13',
-  '2026-07-27','2026-07-28','2026-07-29','2026-07-30','2026-07-31',
-  '2026-08-01','2026-08-02','2026-08-03','2026-08-04','2026-08-05',
-  '2026-08-06','2026-08-07','2026-08-08','2026-08-09',
+  '2026-07-04','2026-07-05','2026-07-06','2026-07-07','2026-07-08','2026-07-09',
+  '2026-07-10','2026-07-11','2026-07-12','2026-07-13','2026-07-14','2026-07-15',
+  '2026-07-16','2026-07-17','2026-07-18','2026-07-19','2026-07-20','2026-07-21',
+  '2026-07-22','2026-07-23','2026-07-24','2026-07-25','2026-07-26','2026-07-27',
+  '2026-07-28','2026-07-29','2026-07-30','2026-07-31','2026-08-01','2026-08-02',
+  '2026-08-03','2026-08-04','2026-08-05','2026-08-06','2026-08-07','2026-08-08',
+  '2026-08-09',
   '2026-08-25','2026-08-26','2026-08-27','2026-08-28','2026-08-29',
   '2026-08-30','2026-08-31','2026-09-01','2026-09-02','2026-09-03',
   '2026-09-04','2026-09-05',
