@@ -768,8 +768,8 @@ const OVERVIEW_DESC={
 // ═══════════════════════════════════════════════════════════
 function load(){ try{const s=localStorage.getItem('sp_v5'); if(s) checked=JSON.parse(s);}catch(e){} }
 function save(){ try{localStorage.setItem('sp_v5',JSON.stringify(checked));}catch(e){} }
-function saveSchedule(){ try{localStorage.setItem('sp_sched_v2',JSON.stringify(schedule));}catch(e){} }
-function loadSchedule(){ try{const s=localStorage.getItem('sp_sched_v2'); if(s) schedule=JSON.parse(s);}catch(e){} }
+function saveSchedule(){ try{localStorage.setItem('sp_sched_v3',JSON.stringify(schedule));}catch(e){} }
+function loadSchedule(){ try{const s=localStorage.getItem('sp_sched_v3'); if(s) schedule=JSON.parse(s);}catch(e){} }
 function saveWeakness(){ try{localStorage.setItem('sp_weakness_v1',JSON.stringify(weaknessLog));}catch(e){} }
 function loadWeakness(){ try{const s=localStorage.getItem('sp_weakness_v1'); if(s) weaknessLog=JSON.parse(s);}catch(e){} }
 function savePhasesMeta(){
@@ -778,11 +778,11 @@ function savePhasesMeta(){
   PHASES.forEach(p=>{
     meta[p.id]={dates:p.dates,note:p.note,days:p.days.map(d=>({id:d.id,label:d.label}))};
   });
-  try{localStorage.setItem('sp_phasemeta_v2',JSON.stringify(meta));}catch(e){}
+  try{localStorage.setItem('sp_phasemeta_v3',JSON.stringify(meta));}catch(e){}
 }
 function loadPhasesMeta(){
   try{
-    const s=localStorage.getItem('sp_phasemeta_v2');
+    const s=localStorage.getItem('sp_phasemeta_v3');
     if(!s) return;
     const meta=JSON.parse(s);
     PHASES.forEach(p=>{
@@ -805,7 +805,13 @@ function allIds(){ return PHASES.flatMap(p=>p.days.flatMap(d=>d.tasks.map((_,i)=
 function phaseDone(ph){ return ph.days.flatMap(d=>d.tasks.map((_,i)=>`${d.id}_${i}`)).filter(id=>checked[id]).length; }
 function phaseTotal(ph){ return ph.days.flatMap(d=>d.tasks).length; }
 function dayDone(d){ return d.tasks.filter((_,i)=>checked[`${d.id}_${i}`]).length; }
-function todayISO(){ const t=new Date(); t.setHours(0,0,0,0); return t.toISOString().split('T')[0]; }
+function todayISO(){
+  const t=new Date();
+  const y=t.getFullYear();
+  const m=String(t.getMonth()+1).padStart(2,'0');
+  const d=String(t.getDate()).padStart(2,'0');
+  return `${y}-${m}-${d}`;
+}
 
 function fmtDate(dateStr){
   const d=new Date(dateStr+'T12:00:00');
@@ -1717,6 +1723,21 @@ captureOriginalPhaseMeta();
 load();
 loadWeakness();
 loadSchedule();
+
+// Self-healing check: if the cached schedule references day-ids that no longer
+// exist in the current PHASES structure (e.g. after a plan restructure), the
+// cache is stale and must be discarded rather than silently producing gaps.
+(function validateSchedule(){
+  const validIds=new Set(ALL_STUDY_DAYS.map(d=>d.id));
+  const cachedIds=Object.keys(schedule);
+  const isStale = cachedIds.length!==validIds.size || cachedIds.some(id=>!validIds.has(id));
+  if(isStale){
+    schedule={};
+    buildDefaultSchedule();
+    saveSchedule();
+  }
+})();
+
 if(Object.keys(schedule).length===0) buildDefaultSchedule();
 loadPhasesMeta();
 renderAll();
