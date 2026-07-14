@@ -3,73 +3,74 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>Summer Foundations — Light Tracker</title>
+<title>Foundations Tracker</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#F6F5F1;min-height:100vh;padding-bottom:50px;color:#2B2A28;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#F7F4EE;min-height:100vh;padding-bottom:56px;color:#2A2825;}
+  h1,.serif{font-family:ui-serif,Georgia,"Times New Roman",serif;}
 
-  .header{background:#2F5D50;color:#F6F5F1;padding:22px 18px 20px;}
-  .eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:0.65;margin-bottom:4px;}
-  .header h1{font-size:21px;font-weight:800;margin-bottom:4px;}
-  .header p{font-size:12.5px;opacity:0.8;line-height:1.5;}
-  .stat-row{display:flex;gap:10px;margin-top:16px;}
-  .stat{flex:1;background:rgba(255,255,255,0.1);border-radius:12px;padding:10px 12px;}
-  .stat-num{font-size:18px;font-weight:800;}
-  .stat-label{font-size:9.5px;opacity:0.75;text-transform:uppercase;letter-spacing:0.5px;margin-top:1px;}
-  .progress-track{background:rgba(255,255,255,0.2);border-radius:20px;height:7px;margin-top:14px;overflow:hidden;}
-  .progress-fill{background:#E8B84B;border-radius:20px;height:7px;transition:width .3s;}
+  .header{background:linear-gradient(160deg,#1F3A32 0%,#16281F 100%);color:#F7F4EE;padding:26px 20px 24px;border-radius:0 0 22px 22px;}
+  .eyebrow{font-size:10px;font-weight:700;letter-spacing:2.2px;text-transform:uppercase;opacity:0.6;margin-bottom:6px;}
+  .header h1{font-size:23px;font-weight:600;margin-bottom:8px;letter-spacing:.2px;}
+  .header p{font-size:12.5px;opacity:0.82;line-height:1.55;}
+  .stat-row{display:flex;gap:10px;margin-top:18px;}
+  .stat{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.08);border-radius:13px;padding:11px 12px;}
+  .stat-num{font-size:19px;font-weight:700;font-family:ui-serif,Georgia,serif;}
+  .stat-label{font-size:9.5px;opacity:0.7;text-transform:uppercase;letter-spacing:0.6px;margin-top:2px;}
+  .progress-track{background:rgba(255,255,255,0.15);border-radius:20px;height:6px;margin-top:16px;overflow:hidden;}
+  .progress-fill{background:linear-gradient(90deg,#D4A537,#E8C468);border-radius:20px;height:6px;transition:width .3s;}
 
-  .banner{margin:16px 16px 14px;background:white;border-radius:14px;padding:16px;box-shadow:0 1px 6px rgba(43,42,40,0.08);border-left:4px solid #2F5D50;}
-  .banner.rest{border-left-color:#94A3B8;background:#FAFAF8;}
-  .banner.light{border-left-color:#E8B84B;background:#FFFBEF;}
-  .banner-eyebrow{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#2F5D50;margin-bottom:4px;}
-  .banner.rest .banner-eyebrow{color:#64748B;}
+  .banner{margin:18px 16px 14px;background:white;border-radius:16px;padding:17px 18px;box-shadow:0 4px 18px rgba(31,58,50,0.07);border-left:4px solid #1F3A32;}
+  .banner.rest{border-left-color:#B8B4A9;background:#FBFAF7;}
+  .banner.light{border-left-color:#D4A537;background:#FEFAF0;}
+  .banner-eyebrow{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#1F3A32;margin-bottom:5px;}
+  .banner.rest .banner-eyebrow{color:#8B8778;}
   .banner.light .banner-eyebrow{color:#A8791F;}
-  .banner-title{font-size:15px;font-weight:800;margin-bottom:8px;}
-  .banner-time{display:inline-block;font-size:11px;font-weight:700;background:#EAF2EF;color:#2F5D50;padding:3px 9px;border-radius:8px;margin-bottom:10px;}
+  .banner-title{font-size:15.5px;font-weight:700;margin-bottom:9px;font-family:ui-serif,Georgia,serif;}
+  .banner-time{display:inline-block;font-size:11px;font-weight:700;background:#EDF2EE;color:#1F3A32;padding:4px 10px;border-radius:8px;margin-bottom:10px;}
   .banner.light .banner-time{background:#FBF0D6;color:#A8791F;}
 
-  .rules{margin:0 16px 16px;background:white;border-radius:14px;padding:14px 16px;box-shadow:0 1px 6px rgba(43,42,40,0.06);}
-  .rules-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94A3B8;margin-bottom:8px;}
-  .rule{display:flex;gap:8px;font-size:12.5px;color:#43423F;line-height:1.5;padding:3px 0;}
-  .rule b{color:#2F5D50;}
+  .rules{margin:0 16px 18px;background:white;border-radius:16px;padding:16px 18px;box-shadow:0 2px 10px rgba(31,58,50,0.05);}
+  .rules-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#A39E8F;margin-bottom:10px;}
+  .rule{display:flex;gap:9px;font-size:12.5px;color:#48453F;line-height:1.55;padding:4px 0;}
+  .rule b{color:#1F3A32;}
 
-  .week{margin:0 16px 14px;}
-  .week-head{display:flex;justify-content:space-between;align-items:baseline;padding:0 2px 8px;}
-  .week-title{font-size:13px;font-weight:800;color:#2B2A28;}
-  .week-sub{font-size:11px;color:#94A3B8;}
+  .week{margin:0 16px 16px;}
+  .week-head{display:flex;justify-content:space-between;align-items:baseline;padding:0 3px 9px;}
+  .week-title{font-size:13.5px;font-weight:700;color:#2A2825;font-family:ui-serif,Georgia,serif;}
+  .week-sub{font-size:11px;color:#A39E8F;}
 
-  .day-card{background:white;border-radius:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(43,42,40,0.06);overflow:hidden;border:1.5px solid transparent;}
-  .day-card.is-today{border-color:#2F5D50;}
-  .day-card.rest-day{opacity:0.7;}
-  .day-top{display:flex;align-items:center;padding:12px 14px;cursor:pointer;gap:10px;}
-  .day-circle{width:22px;height:22px;border-radius:50%;border:2px solid #D8D6CF;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-  .day-circle.done{background:#2F5D50;border-color:#2F5D50;}
-  .day-circle.done span{color:white;font-size:11px;font-weight:800;}
+  .day-card{background:white;border-radius:13px;margin-bottom:9px;box-shadow:0 2px 8px rgba(31,58,50,0.06);overflow:hidden;border:1.5px solid transparent;transition:box-shadow .15s;}
+  .day-card.is-today{border-color:#1F3A32;box-shadow:0 4px 14px rgba(31,58,50,0.14);}
+  .day-card.rest-day{opacity:0.65;}
+  .day-top{display:flex;align-items:center;padding:13px 15px;cursor:pointer;gap:11px;}
+  .day-circle{width:23px;height:23px;border-radius:50%;border:2px solid #E1DDD2;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+  .day-circle.done{background:#1F3A32;border-color:#1F3A32;}
+  .day-circle.done span{color:white;font-size:11px;font-weight:700;}
   .day-info{flex:1;min-width:0;}
-  .day-date{font-size:10.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.4px;}
-  .day-topic{font-size:13px;font-weight:700;color:#2B2A28;margin-top:1px;}
-  .today-tag{display:inline-block;background:#2F5D50;color:white;font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:5px;margin-left:6px;letter-spacing:.3px;vertical-align:middle;}
-  .day-count{font-size:11px;font-weight:700;color:#2F5D50;flex-shrink:0;}
-  .day-arrow{color:#C7C5BE;font-size:12px;flex-shrink:0;}
+  .day-date{font-size:10.5px;font-weight:700;color:#A39E8F;text-transform:uppercase;letter-spacing:0.5px;}
+  .day-topic{font-size:13px;font-weight:600;color:#2A2825;margin-top:2px;}
+  .today-tag{display:inline-block;background:#D4A537;color:#1F3A32;font-size:8.5px;font-weight:800;padding:2px 7px;border-radius:5px;margin-left:6px;letter-spacing:.3px;vertical-align:middle;}
+  .day-count{font-size:11px;font-weight:700;color:#1F3A32;flex-shrink:0;}
+  .day-arrow{color:#D2CDBF;font-size:12px;flex-shrink:0;}
 
-  .tasks{padding:0 14px 12px 46px;}
-  .task{display:flex;gap:9px;align-items:flex-start;padding:6px 0;cursor:pointer;}
-  .task-box{width:18px;height:18px;border-radius:5px;border:2px solid #D8D6CF;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;}
-  .task-box.done{background:#2F5D50;border-color:#2F5D50;}
-  .task-box.done span{color:white;font-size:10px;font-weight:800;}
-  .task-text{font-size:12.5px;color:#43423F;line-height:1.45;}
-  .task-text.done{color:#B4B2AB;text-decoration:line-through;}
+  .tasks{padding:2px 15px 14px 48px;}
+  .task{display:flex;gap:10px;align-items:flex-start;padding:7px 0;cursor:pointer;}
+  .task-box{width:19px;height:19px;border-radius:6px;border:2px solid #E1DDD2;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+  .task-box.done{background:#1F3A32;border-color:#1F3A32;}
+  .task-box.done span{color:white;font-size:10px;font-weight:700;}
+  .task-text{font-size:12.5px;color:#48453F;line-height:1.5;}
+  .task-text.done{color:#C2BEB1;text-decoration:line-through;}
 
-  .footer-note{margin:18px 16px 0;text-align:center;font-size:11.5px;color:#94A3B8;line-height:1.6;padding:0 10px;}
+  .footer-note{margin:22px 16px 0;text-align:center;font-size:11.5px;color:#A39E8F;line-height:1.65;padding:0 12px;}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="eyebrow">Jul 13 → Sep 27 · Micro + Pharm Only · Uni Starts Sep 28</div>
-  <h1>Foundations Tracker — Microbiology & Pharmacology</h1>
-  <p>~15–18 min video (est.) + Anki reviews, most days. Anki reviews first (capped 15–20 new/day), one Sketchy chunk, done. Video times are estimates only — Sketchy publishes module totals, not per-video length, and individual videos run roughly 6–12 min each, so some days will run a bit shorter or longer than shown. Physiology and Pathophysiology are left for lecture — a First Aid page or single Bootcamp video is your on-demand backup if a lecture assumes physio you don't have solid, not a summer queue. Built to leave real room for the gym, Spanish, the move, and everything else.</p>
+  <div class="eyebrow">Jul 27 → Sep 27 · Starts After Vacation · Uni Starts Sep 28</div>
+  <h1>Foundations — Microbiology &amp; Pharmacology</h1>
+  <p>Starts right after your travel — no pre-vacation days to worry about. Microbiology is one-shot (semester 5 only, no repeat) so it's fully in the must-finish set, alongside the Pharm modules confirmed or likely tied to semester 5 (Antimicrobials, Autonomic/CV/Renal, Blood/Inflammation, GI/Endocrine, Neuro/Psych). Antineoplastics & Pharmacology Foundations is held as <b>stretch</b> content — assumed semester 6, correct me if that's wrong too. Must-finish pace: ~1 hr 44 min/day across 25 real study days. Anki first (capped ~20 new/day), internship days stay fully protected.</p>
   <div class="stat-row">
     <div class="stat"><div class="stat-num" id="streak-num">0</div><div class="stat-label">Day streak</div></div>
     <div class="stat"><div class="stat-num" id="done-num">0</div><div class="stat-label">Days done</div></div>
@@ -83,7 +84,7 @@
 <div class="rules">
   <div class="rules-title">The only rules</div>
   <div class="rule">✅ <span><b>Anki reviews always first</b>, before anything new.</span></div>
-  <div class="rule">✅ <span><b>New cards capped at 15–20/day</b> — only from what you actually watched today.</span></div>
+  <div class="rule">✅ <span><b>New cards capped at ~20/day</b> — only from what you actually watched today.</span></div>
   <div class="rule">✅ <span><b>Missed a day? Skip it.</b> No make-up sessions, no guilt.</span></div>
   <div class="rule">✅ <span>During internship weeks: <b>Anki reviews only</b>, nothing new expected.</span></div>
   <div class="rule">✅ <span>1 rest day built in every week — reviews only, if you feel like it.</span></div>
@@ -91,94 +92,23 @@
 
 <div id="weeks-container"></div>
 
-<div class="footer-note">Video times shown are estimates (module average, since Sketchy doesn't publish per-video length) — expect some day-to-day variance since individual videos run ~6–12 min each. Anki review time is separate and additive on top of the video estimate. Micro + Pharm together are ~46 hours of video. Physio/Path/Pathophys are taught properly starting Sep 28 — this tracker isn't trying to cover them.</div>
+<div class="footer-note">Must-finish set (Micro + semester-5 Pharm, including Neuro/Psych) ≈ 43.5 hours ÷ 25 real study days (starting Jul 27, after travel) ≈ 1 hr 44 min/day. Antineoplastics & Pharmacology Foundations stays queued as bonus-only, assumed semester 6 — flag it if that's wrong. Internship days stay fully protected at reviews-only.</div>
+
 
 <script>
 // ═══════════════════════════════════════════════════════════
 // CONFIG — edit these date ranges if your actual dates differ
 // ═══════════════════════════════════════════════════════════
-const START_DATE = '2026-07-13';
-const END_DATE   = '2026-09-27'; // Uni starts Sep 28 — this is the hard boundary for solo pre-study
+const START_DATE = '2026-07-27'; // starts right after travel — no pre-vacation days
+const END_DATE   = '2026-09-27'; // Uni starts Sep 28 — hard boundary for solo pre-study
 
-// Light-mode windows (internships / travel): Anki reviews only, no new content expected
+// Light-mode windows (internships): Anki reviews only, no new content — protected, never touched
 const LIGHT_WINDOWS = [
-  { start:'2026-07-14', end:'2026-07-26', label:'✈️ Travel' },
   { start:'2026-08-10', end:'2026-08-24', label:'🏥 Internship 1' },
   { start:'2026-09-06', end:'2026-09-24', label:'🏥 Internship 2' },
 ];
 
-// Real Sketchy modules — official names, video counts, and total runtimes,
-// pulled directly from Sketchy's own 6-week guide, converted to 1x speed.
-// Micro + Pharm only — self-contained, fact-based, doesn't need a professor's
-// scaffolding, so it's the best fit for solo summer study alongside everything
-// else going on (internships, gym/rehab, Spanish, moving).
-// Physiology/Pathology/Pathophysiology are left for lecture, where they're
-// taught properly — if a specific lecture assumes physio you don't have solid,
-// use First Aid or a single Bootcamp physio video as a targeted reference,
-// not a full pre-study queue.
-const SKETCHY_MODULES = [
-  { name:"Sketchy Micro — Bacteria (Part 1)",                          videos:19, totalMins:75  },
-  { name:"Sketchy Micro — Bacteria (Part 2)",                          videos:34, totalMins:225 },
-  { name:"Sketchy Pharm — Antimicrobials",                             videos:28, totalMins:300 },
-  { name:"Sketchy Micro — Viruses: RNA Viruses",                       videos:21, totalMins:188 },
-  { name:"Sketchy Micro — Viruses: DNA Viruses",                       videos:13, totalMins:113 },
-  { name:"Sketchy Micro — Fungi & Parasites",                          videos:29, totalMins:263 },
-  { name:"Sketchy Pharm — Autonomic Drugs, Cardio & Renal",             videos:21, totalMins:450 },
-  { name:"Sketchy Pharm — Blood & Inflammation, Smooth Muscle",        videos:17, totalMins:356 },
-  { name:"Sketchy Pharm — GI & Endocrine",                             videos:15, totalMins:263 },
-  { name:"Sketchy Pharm — Neuro/Psych",                                videos:25, totalMins:375 },
-  { name:"Sketchy Pharm — Antineoplastics & Pharmacology Foundations", videos:23, totalMins:300 },
-];
-
-// Auto-chunk each module into video portions targeting ~18 min of video/day.
-// NOTE: Sketchy only publishes each module's total runtime and video count,
-// not each individual video's length — and individual videos commonly run
-// 6–12 min each. So chunk size is an ESTIMATE based on the module average,
-// not a guarantee — some days will run a bit shorter, some longer, depending
-// which specific videos land in that chunk. Sizing is floored (rounded down,
-// minimum 1) rather than rounded up, to bias toward the shorter side instead
-// of risking overshoot on a run of longer videos.
-const TARGET_MINS_PER_DAY = 18;
-function chunkModules(modules){
-  const chunks=[];
-  modules.forEach(mod=>{
-    const minsPerVideo = mod.totalMins / mod.videos;
-    const videosPerChunk = Math.max(1, Math.floor(TARGET_MINS_PER_DAY / minsPerVideo));
-    let start=1;
-    while(start<=mod.videos){
-      const end=Math.min(mod.videos, start+videosPerChunk-1);
-      const mins=Math.round((end-start+1)*minsPerVideo);
-      const rangeLabel = start===end ? `video ${start} of ${mod.videos}` : `videos ${start}–${end} of ${mod.videos}`;
-      chunks.push({ t:`${mod.name} — ${rangeLabel}`, mins });
-      start=end+1;
-    }
-  });
-  return chunks;
-}
-const TOPIC_POOL = chunkModules(SKETCHY_MODULES);
-
-// Builds a searchable keyword from the module name (strips the
-// "Sketchy Micro/Pharm —" prefix) so each day's Anki step is copy-pasteable.
-function searchKeyword(moduleName){
-  return moduleName.replace(/^Sketchy (Micro|Pharm) — /,'').replace(/\(Part \d\)/,'').trim();
-}
-
-function buildTasks(topic){
-  const keyword = searchKeyword(topic.t.split(' — videos')[0].split(' — video ')[0]);
-  return [
-    "Anki: clear all due reviews first — new cards wait until this is done",
-    `Watch: ${topic.t}`,
-    `Anki Browse: search  tag:*Sketchy* ${keyword} is:suspended  — select all, right-click → Toggle Suspend`,
-    "If that search returns nothing, drop the tag: prefix and search just the keyword with is:suspended",
-    "Anki: review the newly unsuspended cards once — if it's more than ~20, use Custom Study to cap today's new cards",
-  ];
-}
-
-const LIGHT_TASKS = ["Anki: due reviews only — no new cards today"];
-
-// ═══════════════════════════════════════════════════════════
-// BUILD DAY LIST
-// ═══════════════════════════════════════════════════════════
+// ── Date helpers (defined early — needed before pacing math) ──
 function addDays(dateStr,n){ const d=new Date(dateStr+'T12:00:00'); d.setDate(d.getDate()+n); return d.toISOString().split('T')[0]; }
 function dowIndex(dateStr){ return new Date(dateStr+'T12:00:00').getDay(); } // 0=Sun
 function fmtShort(dateStr){ const d=new Date(dateStr+'T12:00:00'); return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+' '+d.getDate(); }
@@ -186,6 +116,122 @@ function fmtLong(dateStr){ const d=new Date(dateStr+'T12:00:00'); return ['Sunda
 function isLight(dateStr){ return LIGHT_WINDOWS.find(w=>dateStr>=w.start&&dateStr<=w.end); }
 function todayISO(){ const t=new Date(); return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0'); }
 
+// Count real active study days (not light, not Sunday) between START_DATE and END_DATE.
+// This is the actual number of days available to get through all the content.
+let ACTIVE_STUDY_DAYS = 0;
+(function countActiveDays(){
+  let d=START_DATE;
+  while(d<=END_DATE){
+    if(!isLight(d) && dowIndex(d)!==0) ACTIVE_STUDY_DAYS++;
+    d=addDays(d,1);
+  }
+})();
+
+// Real Sketchy modules — official names, video counts, and total runtimes,
+// pulled directly from Sketchy's own 6-week guide, converted to 1x speed.
+// Reprioritized based on curriculum structure: Microbiology is one-shot
+// (semester 5 only, no repeat) so it's fully in the must-finish set. Pharm
+// spans semesters 5 AND 6 — meaning the curriculum itself already gives you
+// two passes and natural spacing — so Neuro/Psych Pharm and Antineoplastics
+// (assumed semester 6 content; correct this if wrong) are marked as stretch:
+// worth covering if there's time, but not something to force this summer.
+const SKETCHY_MODULES = [
+  { name:"Sketchy Micro — Bacteria (Part 1)",                          videos:19, totalMins:75,  stretch:false },
+  { name:"Sketchy Micro — Bacteria (Part 2)",                          videos:34, totalMins:225, stretch:false },
+  { name:"Sketchy Pharm — Antimicrobials",                             videos:28, totalMins:300, stretch:false },
+  { name:"Sketchy Micro — Viruses: RNA Viruses",                       videos:21, totalMins:188, stretch:false },
+  { name:"Sketchy Micro — Viruses: DNA Viruses",                       videos:13, totalMins:113, stretch:false },
+  { name:"Sketchy Micro — Fungi & Parasites",                          videos:29, totalMins:263, stretch:false },
+  { name:"Sketchy Pharm — Autonomic Drugs, Cardio & Renal",            videos:21, totalMins:450, stretch:false },
+  { name:"Sketchy Pharm — Blood & Inflammation, Smooth Muscle",        videos:17, totalMins:356, stretch:false },
+  { name:"Sketchy Pharm — GI & Endocrine",                             videos:15, totalMins:263, stretch:false },
+  { name:"Sketchy Pharm — Neuro/Psych",                                videos:25, totalMins:375, stretch:false },
+  // — Stretch: assumed semester 6 Pharm, gets natural repetition later —
+  { name:"Sketchy Pharm — Antineoplastics & Pharmacology Foundations", videos:23, totalMins:300, stretch:true  },
+];
+const PRIORITY_MODULES = SKETCHY_MODULES.filter(m=>!m.stretch);
+const STRETCH_MODULES = SKETCHY_MODULES.filter(m=>m.stretch);
+const TOTAL_CONTENT_MINS = SKETCHY_MODULES.reduce((s,m)=>s+m.totalMins,0);
+const TOTAL_CONTENT_VIDEOS = SKETCHY_MODULES.reduce((s,m)=>s+m.videos,0);
+const PRIORITY_MINS = PRIORITY_MODULES.reduce((s,m)=>s+m.totalMins,0);
+
+// Required daily pace to finish the MUST-FINISH set (Micro + semester-5
+// Pharm) by Sep 27 — this is the number that matters, not the pace for
+// everything including stretch content.
+const REQUIRED_MINS_PER_DAY = Math.round(PRIORITY_MINS / ACTIVE_STUDY_DAYS);
+
+// ── Build the ordered video list: priority modules first, stretch modules
+// appended after. Days are filled at REQUIRED_MINS_PER_DAY (fixed rate) —
+// this naturally exhausts the priority set right around Sep 27, so stretch
+// content only gets scheduled if there's real slack, never forced.
+let FLAT_VIDEOS = [];
+SKETCHY_MODULES.forEach(mod=>{
+  const mpv = mod.totalMins / mod.videos;
+  for(let i=1;i<=mod.videos;i++){
+    FLAT_VIDEOS.push({ module:mod.name, videoNum:i, totalVideos:mod.videos, mins:mpv, stretch:mod.stretch });
+  }
+});
+
+function buildDayBins(items, M, ratePerDay){
+  const bins=[]; let idx=0;
+  for(let b=0; b<M; b++){
+    const bin=[]; let cum=0;
+    while(idx<items.length && (cum+items[idx].mins <= ratePerDay || bin.length===0)){
+      cum += items[idx].mins;
+      bin.push(items[idx]);
+      idx++;
+    }
+    bins.push(bin);
+  }
+  return bins; // any leftover stretch items past the last bin simply aren't scheduled — by design
+}
+const DAY_BINS = buildDayBins(FLAT_VIDEOS, ACTIVE_STUDY_DAYS, REQUIRED_MINS_PER_DAY);
+
+// Turn a day's bin of individual videos into readable "Watch:" lines — one
+// line per contiguous module range (a bin usually spans 1, occasionally 2
+// modules right at a transition point).
+function binToTopic(bin){
+  if(!bin || bin.length===0) return null;
+  const segments=[];
+  let cur={ module:bin[0].module, start:bin[0].videoNum, end:bin[0].videoNum, totalVideos:bin[0].totalVideos };
+  for(let i=1;i<bin.length;i++){
+    const v=bin[i];
+    if(v.module===cur.module && v.videoNum===cur.end+1){ cur.end=v.videoNum; }
+    else{ segments.push(cur); cur={ module:v.module, start:v.videoNum, end:v.videoNum, totalVideos:v.totalVideos }; }
+  }
+  segments.push(cur);
+  const mins = Math.round(bin.reduce((s,v)=>s+v.mins,0));
+  const lines = segments.map(s=>{
+    const range = s.start===s.end ? `video ${s.start} of ${s.totalVideos}` : `videos ${s.start}–${s.end} of ${s.totalVideos}`;
+    return `${s.module} — ${range}`;
+  });
+  return { lines, mins, segments };
+}
+const TOPIC_POOL = DAY_BINS.map(binToTopic);
+
+// Builds a searchable keyword from a module name (strips the
+// "Sketchy Micro/Pharm —" prefix) so each day's Anki step is copy-pasteable.
+function searchKeyword(moduleName){
+  return moduleName.replace(/^Sketchy (Micro|Pharm) — /,'').replace(/\(Part \d\)/,'').trim();
+}
+
+function buildTasks(topic){
+  const tasks=["Anki: clear all due reviews first — new cards wait until this is done"];
+  topic.lines.forEach(line=>tasks.push(`Watch: ${line}`));
+  topic.segments.forEach(seg=>{
+    const kw=searchKeyword(seg.module);
+    tasks.push(`Anki Browse: search  tag:*Sketchy* ${kw} is:suspended  — select all, right-click → Toggle Suspend`);
+  });
+  tasks.push("If a search returns nothing, drop the tag: prefix and search just the keyword with is:suspended");
+  tasks.push("Anki: review the newly unsuspended cards once — if it's a lot, use Custom Study to cap today's new cards");
+  return tasks;
+}
+
+const LIGHT_TASKS = ["Anki: due reviews only — no new cards today"];
+
+// ═══════════════════════════════════════════════════════════
+// BUILD DAY LIST
+// ═══════════════════════════════════════════════════════════
 let DAYS=[];
 (function build(){
   let d=START_DATE, topicIdx=0;
@@ -195,8 +241,13 @@ let DAYS=[];
     let type='study', tasks=[], label='';
     if(light){ type='light'; label=light.label; tasks=LIGHT_TASKS.slice(); }
     else if(isSunday){ type='rest'; label='Rest day'; tasks=["Anki: quick review only, if you feel like it — otherwise fully off"]; }
-    else{ const topic=TOPIC_POOL[topicIdx % TOPIC_POOL.length]; topicIdx++; type='study'; label=topic.t; tasks=buildTasks(topic); }
-    DAYS.push({ id:'d_'+d, date:d, type, label, tasks, mins: type==='study'?(TOPIC_POOL[(topicIdx-1+TOPIC_POOL.length)%TOPIC_POOL.length].mins||30):(type==='light'?10:5) });
+    else{
+      const topic=TOPIC_POOL[topicIdx];
+      topicIdx++;
+      if(topic){ type='study'; label=topic.lines[0]+(topic.lines.length>1?` (+${topic.lines.length-1} more)`:''); tasks=buildTasks(topic); }
+      else{ type='study'; label='Content complete — bonus review day'; tasks=["Anki: due reviews","Free choice: rewatch a weak module, or get ahead if you want"]; }
+    }
+    DAYS.push({ id:'d_'+d, date:d, type, label, tasks, mins: type==='study'?(TOPIC_POOL[topicIdx-1]?.mins||0):(type==='light'?10:5) });
     d=addDays(d,1);
   }
 })();
